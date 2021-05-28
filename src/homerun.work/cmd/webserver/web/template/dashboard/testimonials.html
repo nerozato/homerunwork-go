@@ -1,0 +1,55 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content client-list">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <div class="row">
+                <div class="col-md-12 mb-4 mb-lg-5">
+                    <div>
+                        <h5>
+                            The positive testimonials from your clients, which will be included in your home page.
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <form method="GET" action="{{.FormAction}}">
+                <input type="hidden" name="{{.Inputs.Client}}" value="{{.ClientView}}">
+                <div class="row align-items-center client-stats py-3 py-lg-4 m-0">
+                    <div class="col-xl-8 mb-3 mb-xl-0">
+                        <h2 class="semibold mb-0">Testimonials <span>{{len .Testimonials}}</span></h2>
+                    </div>
+                    <div class="col-xl-4">
+                        <a href="{{.UrlTestimonialAdd}}" class="btn-block btn btn-secondary float-xl-right"><i class="fas fa-plus-circle" aria-hidden="true"></i> Add Testimonial</a>
+                    </div>
+                </div>
+                <div class="border p-4">
+                    {{range $i, $v := .Testimonials}}
+                    {{if gt $i 0}}
+                    <hr>
+                    {{end}}
+                    <div class="row">
+                        <div class="col-md-3">
+                            {{if $v.GetURLImg}}
+                            <img src="{{$v.GetURLImg}}" alt="" class="w-100 roundedk">
+                            {{end}}
+                        </div>
+                        <div class="col-md">
+                            <p>{{$v.Name}}</p>
+                        </div>
+                        <div class="col-md">
+                            <p>{{$v.City}}</p>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-tertiary edit float-right" name="{{$.Inputs.ID}}" value="{{$v.ID}}"><i class="fas fa-pencil-alt" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

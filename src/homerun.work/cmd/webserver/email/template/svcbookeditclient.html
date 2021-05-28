@@ -1,0 +1,231 @@
+{{define "title"}}Order Update{{end}}
+{{define "body"}}
+<!-- One Column -->
+<table width="600" class="deviceWidth" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#eeeeed" style="margin:0 auto;">
+    <tr>
+        <td align="left" valign="top" style="padding:0; text-align:left; padding-left:40px; padding-top:60px; padding-bottom:60px;" bgcolor="#ffffff" class="nmp">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="middle" width="13%">
+                        <a href="{{forceURLAbs .Ctx .Provider.GetURLProvider}}" target="_blank" style="display:inline-block;">
+                            <img src="{{forceURLAbs .Ctx .Provider.GetURLImgLogo}}" alt="homerun" width="60" height="60" border="0" style="display: inline-block; border-radius: 4px;" />
+                        </a>
+                    </td>
+                    <td valign="middle" width="87%" style="padding-left:10px;">
+                        <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#303030;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:400;">{{.Provider.Name}}</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#303030;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:400;">
+                Hey <strong style="font-weight:600;">{{.Book.Client.Name}}</strong>,
+            </p>
+            <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#303030;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:400;">
+                Your service order has been updated.
+            </p>
+            <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#303030;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:400;">
+                To view the order, please use the <a href="{{forceURLAbs .Ctx .Book.GetURLViewClient}}" target="_blank" style="color:#fb6d3b;">View Order</a> link.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td width="100%" class="m-block">
+                        <table class="m-block" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px;">
+                                    Service Time
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:400; padding-top:3px;">
+                                    {{.Book.FormatDateTime .TimeZone}}
+                                    {{if .Book.IsRecurring}}
+                                    (Repeating {{.Book.FormatRecurrenceFreq}})
+                                    {{end}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {{if .Book.Description}}
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="top" width="50%" class="m-block">
+                        <table class="m-block" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px;">
+                                    Special Request
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:400; padding-top:3px;">
+                                    {{.Book.FormatDescription}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {{end}}
+    {{if .Book.ProviderNote}}
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="top" width="50%" class="m-block">
+                        <table class="m-block" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px;">
+                                    Note from the Provider
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:400; padding-top:3px;">
+                                    {{.Book.FormatProviderNote}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {{end}}
+    {{if .Book.Location}}
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="top" width="50%" class="m-block">
+                        <table class="m-block" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px;">
+                                    Service Location
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:400; padding-top:3px;">
+                                    {{.Book.Location}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {{end}}
+    {{if .Book.MeetingZoomData}}
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="top" width="50%" class="m-block">
+                        <table class="m-block" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px;">
+                                    Join Zoom Meeting
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:400; padding-top:3px;">
+                                    <a href="{{.Book.MeetingZoomData.URLJoin}}" target="_blank">{{.Book.MeetingZoomData.URLJoin}}</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {{end}}
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="top" width="100%" class="m-block">
+                        <table class="m-block" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td valign="top" colspan="3" style="color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="service" width="70%" style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px;">
+                                    Service
+                                </td>
+                                <td class="time" width="15%" style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px; text-align:center;">
+                                    Time
+                                </td>
+                                <td class="price" width="15%" style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px; text-align:right;">
+                                    Price
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:400; padding-bottom:10px; padding-top:15px;">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td valign="top" class="m-block">
+                                                <img class="thumb" src="{{forceURLAbs .Ctx .Svc.GetURLImgMain}}" width="100" height="56">
+                                            </td>
+                                            <td valign="top" class="m-block" style=" padding-left:10px;border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:600; padding-top:0px;">
+                                                {{.Book.ServiceName}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td valign="top" class="time" width="15%" style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:400; padding-bottom:5px; text-align:center; padding-top:15px;">
+                                    {{.Book.ServiceDurationLabel}}
+                                </td>
+                                <td valign="top" class="price" width="15%" style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:400; padding-bottom:5px; text-align:right; padding-top:15px;">
+                                    {{.Book.FormatServicePrice}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="middle" align="center" bgcolor="#FB6D3B" style="background-color:#FB6D3B;border-radius:4px;">
+                        <a class="btn" href="{{forceURLAbs .Ctx .Book.GetURLViewClient}}" target="_blank" style="font-family: 'Source Sans Pro', Georgia, sans-serif;font-size:24px; color:#ffffff; display:block; padding-top:18px; padding-bottom:22px;font-weight:600; padding-left:25px; padding-right:25px;" target="_blank">
+                            View Order
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table><!-- End One Column -->
+{{end}}
+{{define "footer"}}
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td class="help-center">
+            <a href="{{forceURLAbs .Ctx .Provider.GetURLProvider}}" target="_blank" style="font-size:14px;  white-space:nowrap;color:#1a1a1a; font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:700; text-transform:uppercase;">
+                Visit Us
+            </a>
+            <span style="width:40px;display:inline-block;font-size: 14px; font-weight: bold;color:#1a1a1a;">&bull;</span>
+            <a href="{{forceURLAbs .Ctx .Provider.GetURLContactClient}}" target="_blank" style="font-size:14px; white-space:nowrap;color:#1a1a1a; font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:700;text-transform:uppercase;">
+                Contact Us
+            </a>
+        </td>
+    </tr>
+</table>
+{{end}}

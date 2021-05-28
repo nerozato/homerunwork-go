@@ -1,0 +1,134 @@
+{{define "body"}}
+<div class="faq py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h3 class="mb-4">How-To</h3>
+        <div id="accordion">
+          <div class="card">
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <button class="btn btn-link bold text-uppercase" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Sign Up
+                </button>
+              </h5>
+            </div>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="card-body">
+                <p>
+                  If you are a service provider, use the Sign Up or Start button to sign up. Follow these steps:
+                </p>
+                <p>
+                  <span class="font-weight-bold">Step 1: Enter your business information</span>
+                </p>
+                <p>
+                  Enter your business name and description. Select a service area for your business.
+                </p>
+                <p>
+                  <span class="font-weight-bold">Step 2: Add your first service</span>
+                </p>
+                <p>
+                  You can offer services for different durations and prices. Start by adding your first service by entering its name, service duration, and price which can be fixed or hourly. You can also specify whether the service is by appointment only or on-demand.
+                </p>
+                <p>
+                  You can add more services and customize them with advanced options after signup is complete.
+                </p>
+                <p>
+                  <span class="font-weight-bold">Step 3: Create your work schedule</span>
+                </p>
+                <p>
+                  It is important for you to publish your work schedule so that your clients can easily order your services. You can start by selecting the days of the week when you are available and specifying the typical work hours for each day. You can customize your work days and the work hours for each day after signup is complete.
+                </p>
+                <p>
+                  Finally, you can create your branded URL by entering a friendly name for your web page. Choose a name that represents your business and is easy for your clients to remember.
+                </p>
+                <p>
+                  You web page is ready and published after the signup is complete. You can view your page or open your dashboard to customize your page with your own logo and banners. You can also customize your services and schedule.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" id="headingTwo">
+              <h5 class="mb-0">
+                <button class="btn btn-link bold text-uppercase collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Use Zoom for Live Meetings
+                </button>
+              </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+              <div class="card-body">
+                <p>
+                  It is easy to offer services to your clients online in Zoom live meetings.
+                </p>
+                <p>
+                  <span class="font-weight-bold">Activate Zoom</span>
+                </p>
+                <p>
+                  First, you need to activate Zoom on your dashboard by opening the Add-Ons page. You can find the Add-Ons link from the left sidebar of the dashboard.
+                </p>
+                <p>
+                  <img src="{{.UrlAssets}}/provider/img/zoom-activation.png">
+                </p>
+                <p>
+                  On the Add-Ons page, use the Activate button to activate Zoom by connecting to your Zoom account.
+                </p>
+                <p>
+                  <img src="{{.UrlAssets}}/provider/img/zoom-signin.jpg">
+                </p>
+                <p>
+                  If you don’t already have a Zoom account, you can create one by signing up at <a href="https://zoom.us/signup">https://zoom.us/signup</a>.
+                </p>
+                <p>
+                  Follow the instruction from Zoom to download the app to your computer or device. Once the process is complete, you will be returned to your dashboard with a confirmation message. You will then be ready to use the Zoom Live Meeting feature in your service orders.
+                </p>
+                <p>
+                  <span class="font-weight-bold">Enable Zoom for Services</span>
+                </p>
+                <p>
+                  Zoom Live Meeting is for remote services. You can create a remote service by selecting the “Remote” location option, which is for services offered remotely or online. Make sure to check the “Enable Zoom live conference with clients” box under Advanced Options for the service.
+                </p>
+                <p>
+                  <img src="{{.UrlAssets}}/provider/img/zoom-service.jpg">
+                </p>
+                <p>
+                  <span class="font-weight-bold">Use Zoom Live Meeting</span>
+                </p>
+                <p>
+                  When a client orders your service with the Zoom feature enabled, a <span class="font-weight-bold">Join Zoom Live Meeting</span> link is automatically added to the order. At the time of service, you and your client can use the link to enter the live meeting on a computer or mobile device.
+                </p>
+                <p>
+                  <img src="{{.UrlAssets}}/provider/img/zoom-meeting.jpg">
+                </p>
+                <p>
+                  <span class="font-weight-bold">Deactivate Zoom</span>
+                </p>
+                <p>
+                  If you no longer want to use the Zoom feature, you can deactivate it by entering the Add-Ons page from your dashboard, and use the Remove button to deactivate Zoom on your account.
+                </p>
+                <p>
+                  <img src="{{.UrlAssets}}/provider/img/zoom-remove.jpg">
+                </p>
+                <p>
+                  <span class="font-weight-bold">Uninstall the HomeRun app in Zoom</span>
+                </p>
+                <p>
+                  To deauthorize and uninstall the HomeRun application, please do the following:
+                  <ol>
+                    <li>Go to the <a href="https://marketplace.zoom.us/">Zoom App Marketplace</a></li>
+                    <li>Sign In</li>
+                    <li>Navigate to <a href="https://marketplace.zoom.us/user/build">Manage</a> after signing in</li>
+                    <li>Click on <a href="https://marketplace.zoom.us/user/installed">Installed Apps</a> on the left sidebar</li>
+                    <li>Click on "Uninstall" on the HomeRun app displayed in the list of applications</li>
+                    <li>Or view the HomeRun app details by clicking on it, go to "Manage" and hit "Uninstall"</li>
+                  </ol>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

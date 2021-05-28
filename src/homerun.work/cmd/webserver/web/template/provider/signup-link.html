@@ -1,0 +1,30 @@
+{{define "body"}}
+<div class="multiform-confirmation mt-4 mt-lg-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 inner py-3 px-3 py-lg-6 px-lg-6">
+                <h4>Congratulations!</h4>
+                <p>
+                    Your web page has been created at
+                    <br>
+                    <a href="{{.Provider.GetURLProvider}}">{{forceURLAbs .Ctx .Provider.GetURLProvider}}</a>
+                </p>
+                <p>Do you want to customize the link and your page?</p>
+                <br>
+                <br>
+                <div>
+                    <a class="btn-block btn btn-primary" href="{{.Provider.MarkURLClient .Provider.GetURLProfile}}">Yes</a>
+                    <a class="btn-block btn btn-secondary" href="{{.UrlSignUpSuccess}}">Skip for Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
+{{define "body-pre"}}
+{{if .FacebookTrackingId}}
+<script>
+    fbq('track', 'CompleteRegistration', { value: parseInt('{{.FacebookConversionCost}}'), currency: 'USD', });
+</script>
+{{end}}
+{{end}}

@@ -1,0 +1,263 @@
+{{define "body"}}
+<form id="form-appt-add" method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content appointments appointment-5 add-appt">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">
+                            {{if .Book.Confirmed}}
+                            Edit Order
+                            {{if .RecurrenceFreq}}
+                            <span class="repeat-text"></span>
+                            {{end}}
+                            {{else}}
+                            Confirm Order
+                            {{end}}
+                        </h2>
+                    </div>
+                </div>
+                {{if .Book.ClientCreated}}
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <div class="semibold icon-orange">Order created by the client</div>
+                    </div>
+                </div>
+                {{else}}
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="semibold label-infoInput">Select a service:</div>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <div class="input-group row m-0 {{if or .Errs.ID .Errs.ServiceID}}error{{end}}">
+                        <select class="form-control" name="{{.Inputs.SvcID}}" onchange="submitBookingService('#form-appt-add', true, true, '#appointment-5', null);">
+                            {{range .Svcs}}
+                            <option value="{{.ID}}" {{if eq .ID.String $.SvcId}}selected{{end}}>{{.Name}} - {{.FormatPrice}} - {{.FormatDuration}}</option>
+                            {{end}}
+                        </select>
+                        {{if .Errs.ID}}
+                        <div class="error-message">
+                            {{.Errs.ID}}
+                        </div>
+                        {{end}}
+                        {{if .Errs.ServiceID}}
+                        <div class="error-message">
+                            {{.Errs.ServiceID}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Choose a date:</div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-5">
+                    <div class="form-group mb-0 col-12 {{if .Errs.Date}}error{{end}}">
+                        <div class="date-picker">
+                            <input id="appointment-5" name="{{.Inputs.Date}}" value="{{.Date}}">
+                        </div>
+                        {{if .Errs.Date}}
+                        <div class="error-message">
+                            {{.Errs.Date}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Choose a time:</div>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="input-group col-lg-4 {{if .Errs.Time}}error{{end}}">
+                        <select class="form-control repeat-option" name="{{.Inputs.Time}}">
+                            {{range .SvcBusyTimes}}
+                            {{if not .Hidden}}
+                            <option value="{{.Start.Unix}}" {{if .Unavailable}}disabled{{end}} {{if eq .FormatStartUnix $.Time}}selected{{end}}>{{.FormatPeriodLocal $.Svc.IsApptOnly $.TimeZone}}</option>
+                            {{end}}
+                            {{end}}
+                        </select>
+                        {{if .Errs.Time}}
+                        <div class="error-message">
+                            {{.Errs.Time}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Edit the service location:</div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Location}}error{{end}}">
+                            <input type="text" class="form-control" placeholder="Enter the service location" name="{{.Inputs.Location}}" value="{{.Location}}" maxlength="{{.Constants.lenLocation}}">
+                            {{if .Errs.Location}}
+                            <div class="error-message">
+                                {{.Errs.Location}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Client:</div>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        {{.Book.Client.Name}}
+                        <br>
+                        {{.Book.Client.Email}}
+                        <br>
+                        {{.Book.Client.Phone}}
+                    </div>
+                </div>
+                {{if and .Provider.IsAdmin .Book.ProviderUser}}
+                {{if .Book.ProviderUser.User}}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Team Member:</div>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        {{.Book.ProviderUser.User.FirstName}} {{.Book.ProviderUser.User.LastName}}
+                        <br>
+                        {{.Book.ProviderUser.User.Email}}
+                    </div>
+                </div>
+                {{end}}
+                {{end}}
+                {{if .Book.Description}}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Special Request:</div>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        {{.Book.Description}}
+                    </div>
+                </div>
+                {{end}}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Edit the message to client:</div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-5">
+                    <div class="col-lg-12">
+                        <div class="form-group {{if .Errs.ProviderNote}}error{{end}}">
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenDescProviderNote}}" class="form-control" rows="10" placeholder="Please add your note" name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Desc}}</span>/{{.Constants.lenDescProviderNote}}
+                                </div>
+                            </div>
+                            {{if .Errs.ProviderNote}}
+                            <div class="error-message">
+                                {{.Errs.ProviderNote}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Enter a coupon code (optional):</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Code}}error{{end}}">
+                            <input type="text" class="form-control" placeholder="Add a coupon" name="{{.Inputs.Code}}" value="{{.Code}}" maxlength="{{.Constants.lenCodeCoupon}}">
+                            {{if .Errs.Code}}
+                            <div class="error-message">
+                                {{.Errs.Code}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <input type="hidden" name="{{.Inputs.BookID}}" value="{{.Book.ID}}">
+                    <div class="col-sm-6">
+                        <a href="{{.Provider.GetURLBookings}}" class="btn btn-secondary btn-block float-left mb-1">Cancel</a>
+                    </div>
+                    <div class="col-sm-6">
+                        {{if .Book.Confirmed}}
+                        <button type="button" class="btn btn-primary btn-block float-right mb-1" onclick="$('#msg-modal-confirm-update').modal('show');">Update Order</button>
+                        {{else}}
+                        <button type="submit" class="btn btn-primary btn-block float-right mb-1" name="{{.Inputs.Step}}" value="{{.Steps.StepConfirm}}">Confirm</button>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="msg-modal-confirm-update" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabel">Confirmation</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modalConfirmMsg" class="mb-0 px-3 py-3">
+                                    {{if .Book.IsRecurring}}
+                                    How to apply the changes to the occurrences?
+                                    {{else}}
+                                    Are you sure you want to update the order?
+                                    {{end}}
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepUpd}}">
+                                    {{if .Book.IsRecurring}}
+                                    Only Once
+                                    {{else}}
+                                    Update
+                                    {{end}}
+                                </button>
+                                {{if .Book.IsRecurring}}
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepUpdAll}}">All Upcoming</button>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#appointment-5').datepicker();
+        $('#appointment-5').datepicker('setDaysOfWeekDisabled', '{{.DaysOfWeek}}');
+        $('#appointment-5').datepicker('setStartDate', new Date('{{.SvcStartDate}}'));
+        $("#appointment-5").on("changeDate", function () {
+            submitBookingService('#form-appt-add', true, false, '#appointment-5', null);
+        });
+    });
+</script>
+{{if .Svc.IsApptOnly}}
+<script type="module">
+    window.addEventListener('load', function () {
+        $('.repeat-text').text(formatRecurrenceFreq('{{.Date}}', '{{.Book.RecurrenceFreqLabel}}'));
+    });
+</script>
+{{end}}
+{{end}}

@@ -1,0 +1,133 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 py-lg-5 py-4">
+                <h2 class="semibold text-center mb-4">Order Details</h2>
+                {{if .Book.IsCancelled}}
+                <h2 class="semibold text-center mb-4">CANCELLED</h2>
+                {{end}}
+                {{if not .Book.IsRecurring}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Order Time</h5>
+                    <hr class="mt-2 mb-2">
+                    <p><span class="text-muted">{{.Book.FormatCreated .TimeZone}}</p>
+                </div>
+                {{end}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Delivery Time</h5>
+                    <hr class="mt-2 mb-2">
+                    <p><span class="text-muted">{{.Book.FormatDateTime .TimeZone}}</p>
+                </div>
+                <div class="mb-3 mb-lg-3">
+                    <h5 class="font-weight-bold">Client</h5>
+                    <hr class="mt-2 mb-2">
+                    <p>
+                        {{.Book.Client.Name}}
+                        <br>
+                        {{.Book.Client.Email}}
+                        {{if .Book.Client.Phone}}
+                        <br>
+                        {{.Book.Client.Phone}}
+                        {{end}}
+                    </p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table tale-bordered">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0 pl-0">Service</th>
+                                <th width="100" class="border-top-0">Time</th>
+                                <th width="80" class="border-top-0">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="pl-0">
+                                    <div class="media py-2">
+                                        <img src="{{.Svc.GetURLImgMain}}" alt="" width="100px" class="img-fluid rounded mr-3">
+                                        <div lang="media-body">
+                                            <p class="font-weight-bold mb-2">{{.Book.ServiceName}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{.Book.ServiceDurationLabel}}</td>
+                                <td>{{.Book.FormatServicePrice}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {{if .Book.CouponCode}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Coupon</h5>
+                    <hr class="mt-2 mb-2">
+                    {{if .Book.CouponApplied}}
+                    <p>{{.Book.FormatCoupon}}</p>
+                    {{else}}
+                    <p>{{.Book.CouponCode}} - <span class="text-danger">Not Valid</span></p>
+                    {{end}}
+                </div>
+                {{end}}
+                {{if .Book.Description}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Special Request</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p>{{.Book.FormatDescription}}</p>
+                </div>
+                {{end}}
+                {{if .Book.ProviderNote}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Note from the Provider</h5>
+                    <hr class="mt-2 mb-2">
+                    <p>{{.Book.FormatProviderNote}}</p>
+                </div>
+                {{end}}
+                {{if .Book.Location}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Service Location</h5>
+                    <hr class="mt-2 mb-2">
+                    <p>
+                        {{.Book.Location}}
+                        {{if .Book.IsMappable}}
+                        <br>
+                        <a href="{{.Book.GetURLocationMap}}" target="_blank">Map It</a>
+                        {{end}}
+                    </p>
+                </div>
+                {{end}}
+                <div class="row mt-3 mb-4">
+                    <div class="col">
+                        {{if and .Book.MeetingZoomData (.Book.IsEditable .CurrentTime)}}
+                        <a class="btn btn-secondary" href="{{.Book.MeetingZoomData.URLJoin}}" target="_blank">Join Zoom Meeting</a>
+                        {{end}}
+                    </div>
+                    <div class="col-auto">
+                        {{if not .Book.IsCancelled}}
+                        {{if .Book.EnableClientPhone}}
+                        <button type="submit" class="btn btn-secondary float-right" name="{{.Inputs.EnablePhone}}" value="off">Disable SMS</button>
+                        {{else}}
+                        <button type="submit" class="btn btn-secondary float-right" name="{{.Inputs.EnablePhone}}" value="on">Enable SMS</button>
+                        {{end}}
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        {{if not .ClientView}}
+                        <a href="javascript:void(0);" onclick="window.close();" class="btn btn-primary">Done</a>
+                        {{end}}
+                        {{if .Book.SupportsPayment}}
+                        <a href="{{.Book.GetURLPaymentClient}}" class="btn btn-secondary float-right">Pay Now</a>
+                        {{end}}
+                    </div>
+                    <div class="col-auto">
+                        {{if not .Book.IsCancelled}}
+                        <a href="{{.Book.GetURLCancelClient}}" class="btn btn-secondary float-right">Cancel Order</a>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{end}}

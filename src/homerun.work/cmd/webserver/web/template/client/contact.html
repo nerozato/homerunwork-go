@@ -1,0 +1,82 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="contact-header mt-lg-5 mt-4 mb-lg-5 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="semibold">Send a Message to Us</h2>
+                </div>
+            </div>
+        </div>
+        <div class="contact-form mb-lg-5 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group {{if .Errs.Name}}error{{end}}">
+                                <label for="name">Your name:</label>
+                                <input type="text" class="form-control" id="name" placeholder="Please type your name" name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenName}}">
+                                {{if .Errs.Name}}
+                                <div class="error-message">
+                                    {{.Errs.Name}}
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group {{if .Errs.Email}}error{{end}}">
+                                <label for="email">Your email address:</label>
+                                <input type="email" class="form-control" id="email" placeholder="Please type your email" name="{{.Inputs.Email}}" value="{{.Email}}" maxlength="{{.Constants.lenEmail}}">
+                                {{if .Errs.Email}}
+                                <div class="error-message">
+                                    {{.Errs.Email}}
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group {{if .Errs.Phone}}error{{end}}">
+                                <label for="phone">Your phone number:</label>
+                                <input type="text" class="form-control" id="phone" placeholder="Please type your phone no." name="{{.Inputs.Phone}}" value="{{.Phone}}">
+                                {{if .Errs.Phone}}
+                                <div class=" error-message">
+                                    {{.Errs.Phone}}
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group mb-0 {{if .Errs.Text}}error{{end}}">
+                                <label for="message">Your message:</label>
+                                <textarea maxlength="{{.Constants.lenTextContact}}" class="form-control" id="special-requests" rows="5" placeholder="Please type your message" name="{{.Inputs.Text}}">{{.Text}}</textarea>
+                                <div class="chars">
+                                    <span>0</span>/{{.Constants.lenTextContact}}
+                                </div>
+                                {{if .Errs.Text}}
+                                <div class="error-message">
+                                    {{.Errs.Text}}
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contact-actions mb-lg-5 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <input type="hidden" id="timeZone" name="{{.Inputs.TimeZone}}">
+                    <a href="{{.Provider.GetURLProvider}}" class="btn btn-secondary float-left"><i class="fas fa-angle-left" aria-hidden="true"></i> Back</a>
+                    <button type="submit" class="btn btn-primary float-right">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#timeZone').val(getTimeZone());
+    });
+</script>
+{{end}}

@@ -1,0 +1,8 @@
+*.code-workspace
+*.exe
+*.log
+**/temp
+**/upload
+__debug_bin
+googleSA.json
+launch.json

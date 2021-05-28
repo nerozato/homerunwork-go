@@ -1,0 +1,28 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content appointments appointment-7">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <h2 class="semibold">Your changes have been saved successfully.</h2>
+                </div>
+            </div>
+            <div class="row py-4 justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <img src="{{.UrlAssets}}/dashboard/img/confirmation.png" srcset="{{.UrlAssets}}/dashboard/img/confirmation@2x.png 2x" class="img-fluid mb-3">
+                    <p class="m-0">An order email has been sent to: {{.Book.Client.Name}} <a href="mailto:{{.Book.Client.Email}}">{{.Book.Client.Email}}</a></p>
+                    <div class="btn-toolbar mt-3" role="group">
+                        <a href="{{.Book.GetURLView}}" class="btn btn-block btn-secondary">View Order</a>
+                        <a href="{{.Book.GetURLPayment}}" class="btn btn-block btn-secondary">Send Invoice</a>
+                        <a href="{{.Provider.GetURLBookings}}" class="btn btn-block btn-primary">View All Orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

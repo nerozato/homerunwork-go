@@ -1,0 +1,149 @@
+{{define "body"}}
+<div class="container">
+    <div class="booking-confirmation-header mt-lg-5 mt-4 mb-lg-5 mb-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="mb-2 mb-lg-3">You are ordering a service for <span class="black">{{.SvcTime}}</span>:</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card card-grey p-3">
+                    <div class="row align-items-center">
+                        <div class="col-lg-10">
+                            <ul class="list-unstyled mb-0 semibold">
+                                <li>{{.Svc.Name}}</li>
+                                <li>{{.Svc.FormatDuration}}</li>
+                                <li>{{.Svc.FormatPrice}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form method="POST" action="{{.FormAction}}">
+        <div class="booking-confirmation-body mb-lg-5 mb-4">
+            {{if .Errs.TimeZone}}
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="form-group error">
+                        <div class="error-message">
+                            {{.Errs.TimeZone}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="form-group {{if .Errs.Code}}error{{end}}">
+                        <label for="code">If you have a coupon code, please enter here:</label>
+                        <input type="text" class="form-control" id="code" placeholder="Enter coupon code" name="{{.Inputs.Code}}" value="{{.Code}}" maxlength="{{.Constants.lenCodeCoupon}}">
+                        {{if .Errs.Code}}
+                        <div class="error-message">
+                            {{.Errs.Code}}
+                        </div>
+                        {{end}}
+                    </div>
+                    <div class="form-group {{if .Errs.Name}}error{{end}}">
+                        <label for="name">Provide your name to finish booking:</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter name" name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenName}}">
+                        {{if .Errs.Name}}
+                        <div class="error-message">
+                            {{.Errs.Name}}
+                        </div>
+                        {{end}}
+                    </div>
+                    <div class="form-group {{if .Errs.Email}}error{{end}}">
+                        <label for="email">Email:</label>
+                        <input type="text" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" name="{{.Inputs.Email}}" value="{{.Email}}" maxlength="{{.Constants.lenEmail}}">
+                        {{if .Errs.Email}}
+                        <div class="error-message">
+                            {{.Errs.Email}}
+                        </div>
+                        {{end}}
+                    </div>
+                    <div class="form-group {{if .Errs.Phone}}error{{end}}">
+                        <label for="phone">Phone:</label>
+                        <input type="text" class="form-control" id="phone" placeholder="Enter phone" name="{{.Inputs.Phone}}" value="{{.Phone}}">
+                        {{if .Errs.Phone}}
+                        <div class="error-message">
+                            {{.Errs.Phone}}
+                        </div>
+                        {{end}}
+                    </div>
+                    <div class="form-group custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="enablePhone" name="{{.Inputs.EnablePhone}}" {{if .EnablePhone}}checked{{end}} disabled>
+                        <label class="custom-control-label" for="enablePhone">Receive SMS notifications</label>
+                    </div>
+                    {{if .Svc.LocationType.IsLocationClient}}
+                    <div class="form-group {{if .Errs.Location}}error{{end}}">
+                        <label for="location">Location:</label>
+                        <input type="text" class="form-control" id="location" placeholder="Enter location" name="{{.Inputs.Location}}" value="{{.Location}}" maxlength="{{.Constants.lenLocation}}">
+                        {{if .Errs.Location}}
+                        <div class="error-message">
+                            {{.Errs.Location}}
+                        </div>
+                        {{end}}
+                    </div>
+                    {{else if .Svc.LocationType.IsLocationProvider}}
+                    <div class="form-group">
+                        <label for="locationProvider">Location:</label>
+                        <input type="text" class="form-control" id="locationProvider" value="{{.Svc.Location}}" disabled>
+                    </div>
+                    {{end}}
+                    <div class="form-group mb-0 {{if .Errs.Description}}error{{end}}">
+                        <label for="special-requests">Include any special request:</label>
+                        <textarea maxlength="{{.Constants.lenDescBook}}" class="form-control" id="special-requests" rows="3" placeholder="Please describe your request" name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                        <div class="chars">
+                            <span>{{len .Desc}}</span>/{{.Constants.lenDescBook}}
+                        </div>
+                        {{if .Errs.Description}}
+                        <div class="error-message">
+                            {{.Errs.Description}}
+                        </div>
+                        {{end}}
+                    </div>
+                    <div class="form-group mb-0 {{if or .Errs.Date .Errs.Time}}error{{end}}">
+                        {{if .Errs.Date}}
+                        <div class="error-message">
+                            {{.Errs.Date}}
+                        </div>
+                        {{end}}
+                        {{if .Errs.Time}}
+                        <div class="error-message">
+                            {{.Errs.Time}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="booking-actions mb-lg-5 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <input type="hidden" name="{{.Inputs.UserID}}" value="{{.UserId}}">
+                    <input type="hidden" name="{{.Inputs.Date}}" value="{{.Date}}">
+                    <input type="hidden" name="{{.Inputs.Time}}" value="{{.Time}}">
+                    <input type="hidden" id="timeZone" name="{{.Inputs.TimeZone}}">
+                    <a href="{{.UrlPrev}}" class="btn btn-secondary float-left"><i class="fas fa-angle-left" aria-hidden="true"></i> Back</a>
+                    <button type="submit" class="btn btn-primary float-right">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#timeZone').val(getTimeZone());
+        $('#phone').on('input', function (evt) {
+            if ($('#phone').val().length > 0) {
+                $('#enablePhone').attr('disabled', false);
+                return;
+            }
+            $('#enablePhone').attr('disabled', true);
+        });
+    });
+</script>
+{{end}}

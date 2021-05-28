@@ -1,0 +1,19 @@
+{{define "body"}}
+<div class="my-4 my-lg-5">
+    <div class="container">
+        {{range .Providers}}
+        <div class="row">
+            <a href="{{.GetURLProvider}}">{{.Name}}</a>
+        </div>
+        {{end}}
+        <div class="row">
+            {{if .UrlPrev}}
+            <a href="{{addURLType .UrlPrev .Type}}">Prev</a>
+            {{end}}
+            {{if .UrlNext}}
+            <a class="float-right" href="{{addURLType .UrlNext .Type}}">Next</a>
+            {{end}}
+        </div>
+    </div>
+</div>
+{{end}}

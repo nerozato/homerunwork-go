@@ -1,0 +1,115 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content edit-service">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Edit Testimonial</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group {{if .Errs.Name}}error{{end}}">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter the client's name" name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenName}}">
+                            {{if .Errs.Name}}
+                            <div class="error-message">
+                                {{.Errs.Name}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="price">City (optional)</label>
+                        <div class="input-group mb-3 {{if .Errs.City}}error{{end}}">
+                            <input type="text" class="form-control" id="price" placeholder="Enter the client's city" name="{{.Inputs.City}}" value="{{.City}}" maxlength="{{.Constants.lenName}}">
+                            {{if .Errs.City}}
+                            <div class="error-message">
+                                {{.Errs.City}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Text}}error{{end}}">
+                            <label for="text">Quote</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenTextTestimonal}}" class="form-control" id="text" rows="5" placeholder="Enter the client's quote" name="{{.Inputs.Text}}">{{.Text}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Text}}</span>/{{.Constants.lenTextTestimonal}}
+                                </div>
+                            </div>
+                            {{if .Errs.Text}}
+                            <div class="error-message">
+                                {{.Errs.Text}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div id="div-img" class="col-md-12"></div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <input type="hidden" name="{{.Inputs.ID}}" value="{{.Testimonial.ID}}">
+                    <div class="col-sm-4">
+                        {{if .ClientView}}
+                        <a href="{{.Provider.GetURLProvider}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{else}}
+                        <a href="{{.Provider.GetURLTestimonials}}" class="btn btn-secondary btn-block float-left mb-1">Cancel</a>
+                        {{end}}
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-secondary btn-block float-left mb-1" onclick="$('#msg-modal-confirm').modal('show');"><i class="fas fa-trash mr-2" aria-hidden="true"></i> Delete Testimonial</button>
+                    </div>
+                    <div class="col-sm-4">
+                        {{if .Testimonial.GetURLImg}}
+                        <input type="hidden" id="in-img-del" name="{{.Inputs.ImgDel}}" value="false">
+                        {{end}}
+                        <input type="hidden" name="{{.Inputs.Client}}" value="{{.ClientView}}">
+                        <button type="submit" class="btn btn-primary btn-block float-right mb-1" name="{{.Inputs.Step}}" value="{{.Steps.StepUpd}}"><i class="fas fa-check mr-2" aria-hidden="true"></i> Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{block "confirmModal" .}}
+    {{end}}
+    <div class="modal fade" id="cropper-modal" tabindex="-1" role="dialog" aria-labelledby="cropper-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cropper-modalLabel">Cropper</h5>
+                            </div>
+                            <div class="modal-body">
+                                <img id="crop-image" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary btn-crop" data-dismiss="modal">Crop</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="{{.UrlAssets}}/dashboard/js/cropper.js"></script>
+<script type="module">
+    window.addEventListener('load', function () {
+        createImgWidget(0, '#div-img', 'Picture (Recommended: {{.Constants.imgTestimonialWidth}}*{{.Constants.imgTestimonialHeight}})', 'Upload an Image', '{{.Inputs.Img}}', '{{.Testimonial.GetURLImg}}');
+        enableImgCropper('{{.Constants.imgTestimonialWidth}}', '{{.Constants.imgTestimonialHeight}}', '{{.Constants.imgTestimonialWidth}}', '{{.Constants.imgTestimonialHeight}}');
+        $('#btn-trash-0').click(function () {
+            $('#in-img-del').val('true');
+            $('#div-upload').removeClass('d-none');
+        });
+    });
+</script>
+{{end}}

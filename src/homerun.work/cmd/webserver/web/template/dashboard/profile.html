@@ -1,0 +1,311 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content information">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-3 mb-lg-4">Profile</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-4 mb-lg-5">
+                        <div>
+                            <h5>
+                                Your business information on your home page.
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                {{if and (ne .Type .Types.TypeLogo) (ne .Type .Types.TypeBanner)}}
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <span class="font-weight-bold">Website Address:</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-9">
+                        <label for="url">Branded Link for Your Website:</label>
+                        <div class="input-group {{if .Errs.URLName}}error{{end}}">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="url-addon">{{forceURLAbs .Ctx .UrlDefaultProvider}}/</span>
+                            </div>
+                            <input type="text" class="form-control" id="url" placeholder="Enter a friendly name" aria-describedby="url-addon" name="{{.Inputs.URLName}}" value="{{.UrlName}}" maxlength="{{.Constants.lenName}}">
+                            <input type="text" id="provider-link" value="{{forceURLAbs .Ctx .Provider.GetURLProvider}}" style="display:none;">
+                            <div class="input-group-append align-items-center">
+                                <a href="javascript:void(0);" onclick="clipLink('provider-link', '#copied-span');"><i class="far fa-clone icon-orange ml-3" aria-hidden="true"></i></a><span id="copied-span" class="ml-2"></span>
+                            </div>
+                            {{if .Errs.URLName}}
+                            <div class="error-message">
+                                {{.Errs.URLName}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                    </div>
+                </div>
+                <div class="row mb-5 align-items-center">
+                    {{if .Domain}}
+                    <div class="col-md-4">
+                        <a href="{{addURLStep .Provider.GetURLProfileDomain .Steps.StepDel}}" class="btn btn-secondary">Remove My Domain</a>
+                    </div>
+                    <div class="col-md-8">
+                        {{.Domain}}
+                        <a href="https://{{.Domain}}" target="_blank"><i class="fas fa-external-link-alt icon-orange ml-2" aria-hidden="true"></i></a>
+                    </div>
+                    {{else}}
+                    <div class="col-md-4">
+                        <a href="{{.Provider.GetURLProfileDomain}}" class="btn btn-primary">Use My Domain</a>
+                    </div>
+                    {{end}}
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <span class="font-weight-bold">About You:</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group {{if .Errs.Name}}error{{end}}">
+                            <label for="name">Business Name:</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter your business name" name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenName}}">
+                            {{if .Errs.Name}}
+                            <div class="error-message">
+                                {{.Errs.Name}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group {{if .Errs.ServiceArea}}error{{end}}">
+                            <label for="svcArea">Service Area:</label>
+                            <select class="form-control" id="svcArea" name="{{.Inputs.SvcArea}}">
+                                <option value="" {{if not .SvcArea}}selected{{end}} disabled>Please select</option>
+                                {{range .SvcAreaStrs}}
+                                <option {{if eq $.SvcArea .}}selected{{end}}>{{.}}</option>
+                                {{end}}
+                            </select>
+                            {{if .Errs.ServiceArea}}
+                            <div class="error-message">
+                                {{.Errs.ServiceArea}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Description}}error{{end}}">
+                            <label for="desc">Description:</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenDescProvider}}" class="form-control" id="desc" rows="4" placeholder="Please describe your business" name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Desc}}</span>/{{.Constants.lenDescProvider}}
+                                </div>
+                            </div>
+                            {{if .Errs.Description}}
+                            <div class="error-message">
+                                {{.Errs.Description}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Education}}error{{end}}">
+                            <label for="ed">Education: (optional)</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenEducation}}" class="form-control" id="ed" rows="4" placeholder="School and training" name="{{.Inputs.Education}}">{{.Education}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Education}}</span>/{{.Constants.lenEducation}}
+                                </div>
+                            </div>
+                            {{if .Errs.Education}}
+                            <div class="error-message">
+                                {{.Errs.Education}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Experience}}error{{end}}">
+                            <label for="exp">Experience: (optional)</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenExperience}}" class="form-control" id="exp" rows="4" placeholder="Experience and awards" name="{{.Inputs.Experience}}">{{.Experience}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Experience}}</span>/{{.Constants.lenExperience}}
+                                </div>
+                            </div>
+                            {{if .Errs.Experience}}
+                            <div class="error-message">
+                                {{.Errs.Experience}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Location}}error{{end}}">
+                            <label for="location">Location:</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenLocation}}" class="form-control" id="location" rows="2" placeholder="Please enter your location" name="{{.Inputs.Location}}">{{.Location}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Location}}</span>/{{.Constants.lenLocation}}
+                                </div>
+                            </div>
+                            {{if .Errs.Location}}
+                            <div class="error-message">
+                                {{.Errs.Location}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <span class="font-weight-bold">Your Branding:</span>
+                    </div>
+                </div>
+                {{else}}
+                <div class="row" style="display:none;">
+                    <input type="hidden" name="{{.Inputs.Desc}}" value="{{.Desc}}">
+                    <input type="hidden" name="{{.Inputs.Name}}" value="{{.Name}}">
+                    <input type="hidden" name="{{.Inputs.Location}}" value="{{.Location}}">
+                    <input type="hidden" name="{{.Inputs.SvcArea}}" value="{{.SvcArea}}">
+                    <input type="hidden" name="{{.Inputs.Type}}" value="{{.Type}}">
+                    <input type="hidden" name="{{.Inputs.URLName}}" value="{{.UrlName}}">
+                    <input type="hidden" name="{{.Inputs.Domain}}" value="{{.Domain}}">
+                </div>
+                {{end}}
+                <div class="row">
+                    {{if or (not .Type) (eq .Type .Types.TypeLogo)}}
+                    <div class="col-md-12">
+                        <label>Logo:</label>
+                        <div id="div-img-logo" class="col-md-12"></div>
+                    </div>
+                    {{end}}
+                    {{if  or (not .Type) (eq .Type .Types.TypeBanner)}}
+                    <div class="col-md-12">
+                        <label>Banner:</label>
+                        <div id="div-img-banner" class="col-md-12"></div>
+                    </div>
+                    {{end}}
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        {{if .ClientView}}
+                        <a href="{{.Provider.GetURLProvider}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{else}}
+                        <a href="{{.Provider.GetURLProfile}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{end}}
+                    </div>
+                    <div class="col-6">
+                        {{if .Provider.GetURLImgLogoSet}}
+                        <input type="hidden" id="in-img-del-logo" name="{{.Inputs.ImgDelLogo}}" value="false">
+                        {{end}}
+                        {{if .Provider.GetURLImgBannerSet}}
+                        <input type="hidden" id="in-img-del-banner" name="{{.Inputs.ImgDelBanner}}" value="false">
+                        {{end}}
+                        <input type="hidden" name="{{.Inputs.Client}}" value="{{.ClientView}}">
+                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="cropper-modal" tabindex="-1" role="dialog" aria-labelledby="cropper-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cropper-modalLabel">Cropper</h5>
+                            </div>
+                            <div class="modal-body">
+                                <img id="crop-image" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary btn-crop" data-dismiss="modal">Crop</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- Domain Update Modal -->
+<div class="modal fade" id="msg-modal-domain" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body mb-0 px-3 py-3">
+                            <span class="bold">User Your Domain for Your Website</span>
+                            <br>
+                            <br>
+                            <span>You have completed the process of using your domain for your website.</span>
+                            <br>
+                            <br>
+                            <span>You will receive a email when your domain is activated for your website (which may take up to 48 hours). Your clients can continue to use your branded URL to access your website.</span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{.UrlAssets}}/dashboard/js/cropper.js"></script>
+{{if or (not .Type) (eq .Type .Types.TypeLogo)}}
+<script type="module">
+    window.addEventListener('load', function () {
+        createImgWidget(0, '#div-img-logo', '', 'Upload Logo (rec. size: {{.Constants.imgLogoWidth}}*{{.Constants.imgLogoHeight}})', '{{.Inputs.ImgLogo}}', '{{.Provider.GetURLImgLogoSet}}');
+        $('#btn-trash-0').click(function () {
+            $('#in-img-del-logo').val('true');
+            $('#div-upload-logo').removeClass('d-none');
+        });
+    });
+</script>
+{{end}}
+{{if  or (not .Type) (eq .Type .Types.TypeBanner)}}
+<script type="module">
+    window.addEventListener('load', function () {
+        createImgWidget(1, '#div-img-banner', '', 'Upload Banner (rec. size: {{.Constants.imgBannerWidth}}*{{.Constants.imgBannerHeight}})', '{{.Inputs.ImgBanner}}', '{{.Provider.GetURLImgBannerSet}}');
+        $('#btn-trash-1').click(function () {
+            $('#in-img-del-banner').val('true');
+            $('#div-upload-banner').removeClass('d-none');
+        });
+    });
+</script>
+{{end}}
+<script type="module">
+    window.addEventListener('load', function () {
+        enableImgCropper('{{.Constants.imgLogoWidth}}', '{{.Constants.imgLogoHeight}}', '{{.Constants.imgBannerWidth}}', '{{.Constants.imgBannerHeight}}');
+    });
+</script>
+{{if .CookieFlag}}
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#msg-modal-domain').modal('show');
+    });
+</script>
+{{end}}
+{{end}}

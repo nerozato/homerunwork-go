@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{.GoogleTrackingId}}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', '{{.GoogleTrackingId}}');
+    </script>
+    {{if .GoogleTagManagerId}}
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start': new Date().getTime(), event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', '{{.GoogleTagManagerId}}');
+    </script>
+    <!-- End Google Tag Manager -->
+    {{end}}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="{{.MetaDesc}}">
+    <meta name="keywords" content="{{.MetaKeywords}}">
+    <title>HomeRun - {{.PageTitle}}</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{.UrlAssets}}/dashboard/css/cropper.css">
+    {{block "head" .}}
+    {{end}}
+    <link rel="stylesheet" href="{{.UrlAssets}}/provider/css/{{.FileCss}}">
+    <link rel="icon" href="{{.UrlAssets}}/dashboard/img/favicon.ico" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/81bbf29f30.js" crossorigin="anonymous"></script>
+    {{if .FacebookTrackingId}}
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
+        fbq('init', '{{.FacebookTrackingId}}');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{.FacebookTrackingId}}&ev=PageView&noscript=1" /></noscript>
+    <!-- End Facebook Pixel Code -->
+    {{end}}
+</head>
+
+<body>
+    {{if .GoogleTagManagerId}}
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id={{.GoogleTagManagerId}}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    {{end}}
+    {{block "body-pre" .}}
+    {{end}}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{.UrlDefault}}">
+                <span class="d-inline bold title">
+                    <img src="{{.UrlAssets}}/provider/img/logo.png" alt="">
+                </span>
+            </a>
+            {{if not .DisableNav}}
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navigation">
+                <ul class="navbar-nav ml-lg-5">
+                    <li class="nav-item {{if eq .ActiveNav .UrlDefault}}active{{end}}">
+                        <a class="nav-link" href="{{.UrlDefault}}">Home</a>
+                    </li>
+                    <li class="nav-item {{if eq .ActiveNav .UrlHowItWorks}}active{{end}}">
+                        <a class="nav-link" href="{{.UrlHowItWorks}}">Features</a>
+                    </li>
+                    <li class="nav-item {{if eq .ActiveNav .UrlSignUpPricing}}active{{end}}">
+                        <a class="nav-link" href="{{.UrlSignUpPricing}}">Pricing</a>
+                    </li>
+                    <li class="nav-item {{if eq .ActiveNav .UrlFaq}}active{{end}}">
+                        <a class="nav-link" href="{{.UrlFaq}}">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://blog.homerun.work/">Blog</a>
+                    </li>
+                </ul>
+                <div class="cta d-block ml-auto text-center">
+                    {{if not .DisableAuth}}
+                    {{if .UserId}}
+                    <a href="{{.UrlDashboard}}" class="btn btn-secondary mr-2">Open Dashboard</a>
+                    <a href="{{.UrlLogout}}" class="btn btn-primary">Logout</a>
+                    {{else}}
+                    <a href="{{.UrlDashboard}}" class="btn btn-secondary mr-2">Login</a>
+                    <a href="{{.UrlSignUp}}" class="btn btn-primary">Sign Up</a>
+                    {{end}}
+                    {{end}}
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </nav>
+    {{block "body" .}}
+    {{end}}
+    {{if not .DisableNav}}
+    <!-- Message Modal -->
+    <div class="modal fade" id="msg-modal" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabel">{{if .TitleAlert}}{{.TitleAlert}}{{else}}Notification{{end}}</h5>
+                            </div>
+                            <div class="modal-body">
+                                {{if .Msg}}
+                                <p class="mb-0 px-3 py-3">{{.Msg}}</p>
+                                {{end}}
+                                {{if .Err}}
+                                <p class="mb-0 px-3 py-3">{{.Err}}</p>
+                                {{end}}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-two py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="font-weight-bold">HomeRun</h1>
+                    <h6 class="mb-3">Copyright 2020, All rights reserved</h6>
+                    <ul class="list-unstyled list-social mb-5 mb-lg-0">
+                        <li><a href="{{.UrlFacebook}}" target="_blank"><i class="fab fa-facebook" aria-hidden="true"></i></a></li>
+                        <li><a href="{{.UrlTwitter}}" target="_blank"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+                        <li><a href="{{.UrlInstagram}}" target="_blank"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="mb-3 font-weight-bold">Platform</h5>
+                    <ul class="list-unstyled mb-lg-0">
+                        <li><a href="{{.UrlAbout}}">About us</a></li>
+                        <li><a href="{{.UrlSignUpPricing}}">Pricing</a></li>
+                        <li><a href="{{.UrlHowItWorks}}">Features</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="mb-3 font-weight-bold">Support</h5>
+                    <ul class="list-unstyled mb-lg-0">
+                        <li><a href="{{.UrlSupport}}">Contact Us</a></li>
+                        <li><a href="{{.UrlHowTo}}">How To</a></li>
+                        <li><a href="{{.UrlFaq}}">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="mb-3 font-weight-bold">Resources</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="https://blog.homerun.work/">Blog</a></li>
+                        <li><a href="{{.UrlPolicy}}">Privacy Policy</a></li>
+                        <li><a href="{{.UrlTerms}}">Service Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{.UrlAssets}}/provider/js/jquery-3.3.1.min.js"></script>
+    <script src="{{.UrlAssets}}/provider/js/popper.min.js"></script>
+    <script src="{{.UrlAssets}}/provider/js/bootstrap.min.js"></script>
+    <script src="{{.UrlAssets}}/provider/js/moment.js"></script>
+    <script src="{{.UrlAssets}}/provider/js/timepicker.min.js"></script>
+    <script src="{{.UrlAssets}}/provider/js/{{.FileJs}}"></script>
+    {{block "script" .}}
+    {{end}}
+    {{if or (.Err) (.Msg)}}
+    <script type="module">
+        window.addEventListener('load', function () {
+            $('#msg-modal').modal('show');
+        });
+    </script>
+    {{end}}
+    <script type="module">
+        window.addEventListener('load', function () {
+            setCookieTimeZone('{{.Constants.cookieTimeZone}}');
+        });
+    </script>
+    {{end}}
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+{{define "body"}}
+<div class="faq mt-lg-5 mt-4 mb-lg-5 mb-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h3 class="mb-4 mt-5">Frequently Asked Questions</h3>
+        <div id="accordion">
+          {{range $i, $f := .Faqs}}
+          <div class="card">
+            <div class="card-header" id="heading-{{$i}}">
+              <h5 class="mb-0">
+                <button class="btn btn-link bold text-uppercase" data-toggle="collapse" data-target="#collapse-{{$i}}" aria-expanded="false" aria-controls="collapse-{{$i}}">
+                  {{$f.Question}}
+                </button>
+              </h5>
+            </div>
+            <div id="collapse-{{$i}}" class="collapse" aria-labelledby="heading-{{$i}}" data-parent="#accordion">
+              <div class="card-body">
+                <p>
+                  {{$f.Answer}}
+                </p>
+              </div>
+            </div>
+          </div>
+          {{end}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

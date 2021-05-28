@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{.GoogleTrackingId}}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', '{{.GoogleTrackingId}}');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="{{.MetaDesc}}">
+    <meta name="keywords" content="{{.MetaKeywords}}">
+    <title>HomeRun - {{.PageTitle}}</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{.UrlAssets}}/dashboard/css/jquery.timepicker.min.css" />
+    <link rel="stylesheet" href="{{.UrlAssets}}/dashboard/css/cropper.css">
+    {{block "head" .}}
+    {{end}}
+    <link rel="stylesheet" href="{{.UrlAssets}}/dashboard/css/{{.FileCss}}">
+    <link rel="icon" href="{{.UrlAssets}}/dashboard/img/favicon.ico" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/81bbf29f30.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    {{block "body-pre" .}}
+    {{end}}
+    <div class="top-bar py-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <a href="{{.Provider.GetURLProvider}}" class="text-uppercase bold"><i class="fa fa-external-link" aria-hidden="true"></i> View My Page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="{{.Provider.GetURLDashboard}}">
+                    <span class="d-inline bold title">
+                        <img src="{{.Provider.GetURLImgLogo}}" alt="">
+                    </span>
+                    <span class="d-inline bold subtitle">{{.Provider.Name}}</span>
+                </a>
+                <div class="log-out">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{.UrlLogout}}"><i class="fa fa-sign-out" aria-hidden="true"></i> Log Out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    {{block "body" .}}
+    {{end}}
+    <footer class="py-5">
+        <div class="container">
+            <hr>
+            <div class="row copyright">
+                <div class="col-lg-12 text-center text-lg-left">
+                    <p class="mb-0">Hosted by HomeRun.work, Copyright {{.CurrentYear}}, all rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {{define "confirmModal"}}
+    <!-- Confirm Modal -->
+    <div class="modal fade" id="msg-modal-confirm" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabel">Continue?</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modalConfirmMsg" class="mb-0 px-3 py-3">
+                                    {{.ConfirmMsg}}
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary" name="{{.ConfirmSubmitName}}" value="{{.ConfirmSubmitValue}}">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+    <!-- Message Modal -->
+    <div class="modal fade" id="msg-modal" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabel">{{if .TitleAlert}}{{.TitleAlert}}{{else if .Msg}}Success{{else if .Err}}Error{{else}}Notification{{end}}</h5>
+                            </div>
+                            <div class="modal-body">
+                                {{if .Msg}}
+                                <p class="mb-0 px-3 py-3">{{.Msg}}</p>
+                                {{end}}
+                                {{if .Err}}
+                                <p class="mb-0 px-3 py-3">{{.Err}}</p>
+                                {{end}}
+                            </div>
+                            <div class="modal-footer">
+                                {{if .ClientView}}
+                                <a href="{{.Provider.GetURLProvider}}" class="btn btn-primary">Back to My Page</a>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue</button>
+                                {{else}}
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{.UrlAssets}}/dashboard/js/jquery-3.4.1.min.js"></script>
+    <script src="{{.UrlAssets}}/dashboard/js/popper.min.js"></script>
+    <script src="{{.UrlAssets}}/dashboard/js/bootstrap.min.js"></script>
+    <script src="{{.UrlAssets}}/dashboard/js/moment.min.js"></script>
+    <script src="{{.UrlAssets}}/dashboard/js/timepicker.js"></script>
+    <script src="{{.UrlAssets}}/dashboard/js/bootstrap-datepicker.min.js"></script>
+    <script src="{{.UrlAssets}}/dashboard/js/jquery.timepicker.min.js"></script>
+    <script src="{{.UrlAssets}}/dashboard/js/{{.FileJs}}"></script>
+    {{block "script" .}}
+    {{end}}
+    {{if or (.Err) (.Msg)}}
+    <script type="module">
+        window.addEventListener('load', function () {
+            $('#msg-modal').modal('show');
+        });
+    </script>
+    {{end}}
+    <script type="module">
+        window.addEventListener('load', function () {
+            setCookieTimeZone('{{.Constants.cookieTimeZone}}');
+        });
+    </script>
+</body>
+
+</html>
+{{define "marquee"}}
+{{if .Marquee}}
+<h4 class="mb-4 icon-orange">
+    {{.Marquee.Text}}
+    {{if .Marquee.URL}}
+    <a href="{{.Marquee.URL}}" class="icon-orange">
+        <u>{{.Marquee.URLText}}</u>
+    </a>
+    {{end}}
+</h4>
+{{end}}
+{{end}}
+{{define "breadcrumb"}}
+<div class="row py-4 py-lg-5">
+    <div class="col-md-12">
+        {{block "marquee" .}}
+        {{end}}
+        <ul class="list-unstyled mb-0 breadcrumbs">
+            <li><a href="{{.Provider.GetURLDashboard}}">Home</a></li>
+            {{range .Breadcrumbs}}
+            {{if .URL}}
+            <li><a href="{{.URL}}">{{.Name}}</a></li>
+            {{else}}
+            <li>{{.Name}}</li>
+            {{end}}
+            {{end}}
+        </ul>
+    </div>
+</div>
+{{end}}
+{{define "left-nav"}}
+<div class="col-lg-3 pt-3 pt-lg-5 px-lg-0 sidebar">
+    <a class="btn btn-primary btn-block d-lg-none mb-2" data-toggle="collapse" href="#sidebar-menu" role="button" aria-expanded="false" aria-controls="sidebar-menu" style="margin-bottom: 10px;">
+        Menu
+    </a>
+    {{if .Provider.IsAdmin}}
+    <div class="collapse d-lg-block" id="sidebar-menu">
+        <h5 class="d-lg-block">DASHBOARD</h5>
+        <ul class="list-unstyled mb-0 ">
+            <li {{if eq .ActiveNav .Provider.GetURLBookings}}class="active" {{end}}><a href="{{.Provider.GetURLBookings}}">Orders</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLPayments}}class="active" {{end}}><a href="{{.Provider.GetURLPayments}}">Invoices</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLClients}}class="active" {{end}}><a href="{{.Provider.GetURLClients}}">Clients</a></li>
+        </ul>
+    </div>
+    <div class="collapse d-lg-block mt-3" id="sidebar-menu">
+        <h5 class="d-lg-block">MARKETING</h5>
+        <ul class="list-unstyled mb-0 ">
+            <li {{if eq .ActiveNav .Provider.GetURLCampaigns}}class="active" {{end}}><a href="{{.Provider.GetURLCampaigns}}">Campaigns</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLCoupons}}class="active" {{end}}><a href="{{.Provider.GetURLCoupons}}">Coupons</a></li>
+        </ul>
+    </div>
+    <div class="collapse d-lg-block mt-3" id="sidebar-menu">
+        <h5 class="d-lg-block">MY PAGE</h5>
+        <ul class="list-unstyled mb-0 ">
+            <li {{if eq .ActiveNav .Provider.GetURLProfile}}class="active" {{end}}><a href="{{.Provider.GetURLProfile}}">Profile</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLAbout}}class="active" {{end}}><a href="{{.Provider.GetURLAbout}}">Our Story</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLTestimonials}}class="active" {{end}}><a href="{{.Provider.GetURLTestimonials}}">Testimonials</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLServices}}class="active" {{end}}><a href="{{.Provider.GetURLServices}}">Services</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLHours}}class="active" {{end}}><a href="{{.Provider.GetURLHours}}">Schedule</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLFaqs}}class="active" {{end}}><a href="{{.Provider.GetURLFaqs}}">FAQ</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLLinks}}class="active" {{end}}><a href="{{.Provider.GetURLLinks}}">Links</a></li>
+        </ul>
+    </div>
+    <div class="collapse d-lg-block mt-3" id="sidebar-menu">
+        <h5 class="d-lg-block">SETTINGS</h5>
+        <ul class="list-unstyled mb-0 ">
+            {{if .Provider.GoogleCalendarID}}
+            <li {{if eq .ActiveNav .Provider.GetURLCalendar}}class="active" {{end}}><a href="{{.Provider.GetURLCalendar}}">Calendars</a></li>
+            {{end}}
+            <li {{if eq .ActiveNav .Provider.GetURLPaymentSettings}}class="active" {{end}}><a href="{{.Provider.GetURLPaymentSettings}}">Payments</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLAccount}}class="active" {{end}}><a href="{{.Provider.GetURLAccount}}">Account</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLAddOns}}class="active" {{end}}><a href="{{.Provider.GetURLAddOns}}">Add-Ons</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLUsers}}class="active" {{end}}><a href="{{.Provider.GetURLUsers}}">Team Members</a></li>
+        </ul>
+    </div>
+    {{else}}
+    <div class="collapse d-lg-block mt-3" id="sidebar-menu">
+        <h5 class="d-lg-block">DASHBOARD</h5>
+        <ul class="list-unstyled mb-0 ">
+            <li {{if eq .ActiveNav .Provider.GetURLBookings}}class="active" {{end}}><a href="{{.Provider.GetURLBookings}}">Orders</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLHours}}class="active" {{end}}><a href="{{.Provider.GetURLHours}}">Schedule</a></li>
+            <li {{if eq .ActiveNav .Provider.GetURLAddOns}}class="active" {{end}}><a href="{{.Provider.GetURLAddOns}}">Add-Ons</a></li>
+        </ul>
+    </div>
+    {{end}}
+</div>
+{{end}}

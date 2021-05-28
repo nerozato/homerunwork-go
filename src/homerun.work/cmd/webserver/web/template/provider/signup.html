@@ -1,0 +1,179 @@
+{{define "body"}}
+<div class="signup mt-3 mt-lg-3">
+    <div class="container">
+        <div class="row alpha justify-content-center">
+            <div class="col-lg-5 form">
+                <div class="inner py-3 px-3 py-lg-6 px-lg-6">
+                    <p class=""><strong>Already with us? Please <a href="{{.UrlLogin}}">Sign In</a>.</strong></p>
+                    <h5>Create Your Account</h5>
+                    <h6 class="mb-4">Get started with us and earn more !</h6>
+                    <form id="form-signup" method="POST" action="{{.FormAction}}">
+                        {{if .Errs.TimeZone}}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group mb-4 error">
+                                    <div class="error-message">
+                                        {{.Errs.TimeZone}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{if not .ProviderId}}
+                        <div class="row">
+                            <div class="col-md-12 mb-4 text-center">
+                                <button class="btn-google" type="button"><img src="{{.UrlAssets}}/provider/img/google_signup.png" alt=""></button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-4 text-center">
+                                <fb:login-button scope="public_profile,email" size="medium" button-type="continue_with" onlogin="checkFacebookLoginState();"></fb:login-button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h6 class="mb-4">&hyphen; OR &hyphen;</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h6>sign up with email</h6>
+                                <hr>
+                            </div>
+                        </div>
+                        {{end}}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group {{if .Errs.FirstName}}error{{end}}">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder="First Name" name="{{.Inputs.FirstName}}" value="{{.FirstName}}" maxlength="{{.Constants.lenName}}">
+                                    {{if .Errs.FirstName}}
+                                    <div class="error-message">
+                                        {{.Errs.FirstName}}
+                                    </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group {{if .Errs.LastName}}error{{end}}">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="{{.Inputs.LastName}}" value="{{.LastName}}" maxlength="{{.Constants.lenName}}">
+                                    {{if .Errs.LastName}}
+                                    <div class="error-message">
+                                        {{.Errs.LastName}}
+                                    </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group {{if .Errs.Email}}error{{end}}">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="{{.Inputs.Email}}" value="{{.Email}}" maxlength="{{.Constants.lenEmail}}" {{if .ProviderId}}disabled{{end}}>
+                                    {{if .Errs.Email}}
+                                    <div class="error-message">
+                                        {{.Errs.Email}}
+                                    </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group mb-4 {{if .Errs.Password}}error{{end}}" id="show_hide_password">
+                                    <label for="password" class="field-title">Password</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Password" name="{{.Inputs.Password}}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-eye-slash" aria-hidden="true"></i></span>
+                                    </div>
+                                    {{if .Errs.Password}}
+                                    <div class="error-message">
+                                        {{.Errs.Password}}
+                                    </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-4">
+                                <div class="g-recaptcha" data-sitekey="{{.GoogleRecaptchaSiteKey}}"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center mb-4">
+                                <input type="hidden" id="input-oauth" name="{{.Inputs.OAuth}}">
+                                <input type="hidden" id="input-oauth-token" name="{{.Inputs.Token}}">
+                                <input type="hidden" id="timeZone" name="{{.Inputs.TimeZone}}">
+                                <input type="hidden" name="{{.Inputs.Email}}" value="{{.Email}}">
+                                <input type="hidden" name="{{.Inputs.ProviderID}}" value="{{.ProviderId}}">
+                                <input type="hidden" name="{{.Inputs.Type}}" value="{{.TypeSignUp}}">
+                                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                                <a href="{{.UrlSignUp}}" class="btn btn-secondary btn-block">Reset</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h6>
+                                    By signing-up, you agee to our <a href="{{.UrlTerms}}" target="_blank">Service Terms</a> and <a href="{{.UrlPolicy}}" target="_blank">Privacy Policy</a>.
+                                </h6>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5 bg-image align-items-end d-flex"></div>
+        </div>
+    </div>
+</div>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#timeZone').val(getTimeZone());
+        $('.btn-google').click(function (evt) {
+            submitOauth('form-signup', 'input-oauth', '{{.Constants.oauthGoogle}}', 'input-oauth-token', '');
+        });
+        FB.getLoginStatus(function (response) {
+            if (response.status === 'connected') {
+                FB.logout();
+                return;
+            }
+            processFacebookLogin(response);
+        });
+    });
+</script>
+{{end}}
+{{define "head"}}
+<script>
+    function processFacebookLogin(response) {
+        if (response.status === 'connected') {
+            submitOauth('form-signup', 'input-oauth', '{{.Constants.oauthFacebook}}', 'input-oauth-token', response.authResponse.accessToken);
+        }
+    }
+    function checkFacebookLoginState() {
+        FB.getLoginStatus(function (response) {
+            processFacebookLogin(response);
+        });
+    }
+</script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{{end}}
+{{define "body-pre"}}
+<script>
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '{{.FacebookAppId}}',
+            cookie: true,
+            xfbml: true,
+            version: '{{.FacebookAPIVersion}}'
+        });
+        FB.AppEvents.logPageView();
+    };
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+{{end}}

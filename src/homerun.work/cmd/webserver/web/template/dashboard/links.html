@@ -1,0 +1,98 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content links">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <form method="POST" action="{{.FormAction}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-3 mb-lg-4">Links</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-4 mb-lg-5">
+                        <div>
+                            <h5>
+                                Your social media and web site links, which will be included on your home page.
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.URLLinkedIn}}error{{end}}">
+                            <label for="urlLinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i> LinkedIn:</label>
+                            <input type="text" class="form-control" id="urlLinkedIn" placeholder="Enter your LinkedIn URL" name="{{.Inputs.URLLinkedIn}}" value="{{.UrlLinkedInProvider}}" maxlength="{{.Constants.lenUrl}}">
+                            {{if .Errs.URLLinkedIn}}
+                            <div class="error-message">
+                                {{.Errs.URLLinkedIn}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.UrlFacebook}}error{{end}}">
+                            <label for="urlFacebook"><i class="fab fa-facebook" aria-hidden="true"></i> Facebook:</label>
+                            <input type="text" class="form-control" id="urlFacebook" placeholder="Enter your Facebook URL" name="{{.Inputs.URLFacebook}}" value="{{.UrlFacebookProvider}}" maxlength="{{.Constants.lenUrl}}">
+                            {{if .Errs.UrlFacebook}}
+                            <div class="error-message">
+                                {{.Errs.UrlFacebook}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.UrlInstagram}}error{{end}}">
+                            <label for="urlInstagram"><i class="fab fa-instagram" aria-hidden="true"></i> Instagram:</label>
+                            <input type="text" class="form-control" id="urlInstagram" placeholder="Enter your Instagram URL" name="{{.Inputs.URLInstagram}}" value="{{.UrlInstagramProvider}}" maxlength="{{.Constants.lenUrl}}">
+                            {{if .Errs.UrlInstagram}}
+                            <div class="error-message">
+                                {{.Errs.UrlInstagram}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.URLTwitter}}error{{end}}">
+                            <label for="urlTwitter"><i class="fab fa-twitter" aria-hidden="true"></i> Twitter:</label>
+                            <input type="text" class="form-control" id="urlTwitter" placeholder="Enter your Twitter URL" name="{{.Inputs.URLTwitter}}" value="{{.UrlTwitterProvider}}" maxlength="{{.Constants.lenUrl}}">
+                            {{if .Errs.URLTwitter}}
+                            <div class="error-message">
+                                {{.Errs.URLTwitter}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.URLWeb}}error{{end}}">
+                            <label for="urlWeb"><i class="fas fa-globe" aria-hidden="true"></i> My Web Page:</label>
+                            <input type="text" class="form-control" id="urlWeb" placeholder="Enter your Web URL" name="{{.Inputs.URLWeb}}" value="{{.UrlWebProvider}}" maxlength="{{.Constants.lenUrl}}">
+                            {{if .Errs.URLWeb}}
+                            <div class="error-message">
+                                {{.Errs.URLWeb}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        {{if .ClientView}}
+                        <a href="{{.Provider.GetURLProvider}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{else}}
+                        <a href="{{.Provider.GetURLLinks}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{end}}
+                    </div>
+                    <div class="col-6">
+                        <input type="hidden" name="{{.Inputs.Client}}" value="{{.ClientView}}">
+                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

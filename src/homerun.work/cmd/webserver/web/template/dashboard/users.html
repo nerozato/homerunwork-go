@@ -1,0 +1,55 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content client-list">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <div class="row">
+                <div class="col-md-12 mb-4 mb-lg-5">
+                    <div>
+                        <h5>
+                            Add team members to help you work with clients, where each team member can create their own work schedule and use their own Zoom account. Assign team members to one or more services and enable them to accept orders.
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <form id="form-user" method="GET">
+                <div class="row align-items-center client-stats py-3 py-lg-4 m-0 mb-3">
+                    <div class="col-xl-9 mb-3 mb-xl-0">
+                        <h2 class="semibold mb-0">Team Members <span>{{len .Users}} members</span></h2>
+                    </div>
+                    <div class="col-xl-3">
+                        <a href="{{.Provider.GetURLUserAdd}}" class="btn-block btn btn-secondary float-xl-right addClientsBtn"><i class="fas fa-plus-circle" aria-hidden="true"></i> Add Member</a>
+                    </div>
+                </div>
+                <div class="row m-0">
+                    <input type="hidden" id="input-user-id" name="{{.Inputs.UserID}}">
+                    {{range .Users}}
+                    <div class="col-md-12 client">
+                        <ul class="list-unstyled clearfix mb-0">
+                            <li class="client-email">
+                                <p class="d-block">{{.Login}}</p>
+                            </li>
+                            <li class="client-name">
+                                <p class="d-block">
+                                    {{if .User}}
+                                    Registered
+                                    {{else}}
+                                    Not Registered
+                                    {{end}}
+                                </p>
+                            </li>
+                            <li class="client-actions">
+                                <button type="button" class="btn btn-tertiary edit" onclick="submitForm('form-user', '{{$.FormAction}}', 'input-user-id', '{{.ID}}', false);"><i class="fas fa-pencil-alt" aria-hidden="true"></i></button>
+                            </li>
+                        </ul>
+                    </div>
+                    {{end}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

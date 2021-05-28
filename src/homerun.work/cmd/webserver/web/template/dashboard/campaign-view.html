@@ -1,0 +1,134 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content edit-client">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">View Campaign</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Service:</h5>
+                        <p>{{.Campaign.FormatService}}</p>
+                    </div>
+                </div>
+                {{if .Campaign.Text}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Promotional Text:</h5>
+                        <p>{{.Campaign.Text}}</p>
+                    </div>
+                </div>
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <h5 class="font-weight-bold">Image for the Campaign:</h5>
+                        <img src="{{.Campaign.GetURLImg}}" alt="" class="img-fluid rounded">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Target Client:</h5>
+                        <p>
+                            {{.Campaign.Gender}}, {{.Campaign.AgeMin}} - {{.Campaign.AgeMax}}
+                            {{if .Campaign.Locations}}
+                            <br>
+                            {{.Campaign.Locations}}
+                            {{end}}
+                            {{if .Campaign.Interests}}
+                            <br>
+                            {{.Campaign.Interests}}
+                            {{end}}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Schedule and Budget:</h5>
+                        <p>{{.Campaign.FormatStart .TimeZone}} - {{.Campaign.FormatEnd .TimeZone}}, {{.Campaign.FormatDuration}}, Total {{.Campaign.FormatBudgetTotal}} ({{.Campaign.FormatBudget}})</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Ad Platform:</h5>
+                        <p>
+                            {{.Campaign.Platform}}
+                            <br>
+                            Use Existing Facebook Page:
+                            <span class="font-weight-bold">
+                                {{if .Campaign.HasFacebookPage}}
+                                <a href="{{.Campaign.URLFacebook}}" target="_blank">{{.Campaign.URLFacebook}}</a>
+                                {{else}}
+                                Need help to create
+                                {{end}}
+                            </span>
+                            <br>
+                            Use Existing Facebook Ad Account:
+                            <span class="font-weight-bold">
+                                {{if .Campaign.HasFacebookAdAccount}}
+                                Yes
+                                {{else}}
+                                Need help to create
+                                {{end}}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Status:</h5>
+                        <h2 class="semibold mt-3">{{.Campaign.Status}}</h2>
+                        {{if .Campaign.Deleted}}
+                        <br>
+                        <br>
+                        <h2 class="semibold mt-3">Deleted</h2>
+                        {{end}}
+                    </div>
+                </div>
+                {{if .Campaign.IsPublished}}
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <p class="font-weight-bold">
+                            <a href="https://www.facebook.com/adsmanager/" target="_blank">Manage Campaign in Facebook</a>
+                        </p>
+                    </div>
+                </div>
+                {{end}}
+                {{if .Payment}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Payment:</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="font-weight-bold">
+                            Invoiced: {{.Payment.FormatInvoiced .TimeZone}}
+                            {{if .Payment.IsCaptured}}
+                            <br>
+                            Paid: {{.Payment.FormatCaptured .TimeZone}}
+                            {{else if .Payment.IsPaid}}
+                            <br>
+                            Received: {{.Payment.FormatPaid .TimeZone}}
+                            {{end}}
+                        </p>
+                    </div>
+                </div>
+                {{end}}
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        <a href="{{.Provider.GetURLCampaigns}}" class="btn btn-secondary">Done</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="{{.Inputs.ID}}" value="{{.Campaign.ID}}">
+</form>
+{{end}}

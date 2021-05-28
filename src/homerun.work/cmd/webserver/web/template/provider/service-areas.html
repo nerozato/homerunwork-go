@@ -1,0 +1,11 @@
+{{define "body"}}
+<div class="my-4 my-lg-5">
+    <div class="container">
+        {{range .ServiceAreas}}
+        <div class="row">
+            <a href="{{addURLType $.UrlProviders .}}">{{.}}</a>
+        </div>
+        {{end}}
+    </div>
+</div>
+{{end}}

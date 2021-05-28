@@ -1,0 +1,37 @@
+{{define "body"}}
+<div class="signup mt-3 mt-lg-3">
+    <div class="container">
+        <div class="row alpha justify-content-center">
+            <div class="col-lg-5 form">
+                <div class="inner py-3 px-3 py-lg-6 px-lg-6">
+                    <h5>Recover Your Account</h5>
+                    <h6 class="mb-4"></h6>
+                    <form method="POST" action="{{.FormAction}}">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group {{if .Errs.Email}}error{{end}}">
+                                    <label for="email">Email address</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="{{.Inputs.Email}}" value="{{.Email}}" maxlength="{{.Constants.lenEmail}}">
+                                    {{if .Errs.Email}}
+                                    <div class="error-message">
+                                        {{.Errs.Email}}
+                                    </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                                <a href="{{.UrlLogin}}" class="btn btn-secondary btn-block">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5 bg-imageLogin align-items-end d-flex"></div>
+        </div>
+        <p class="text-center my-4 my-lg-5">Already with us? Let us take you to <a href="{{.UrlLogin}}">Sign In</a>!</p>
+    </div>
+</div>
+{{end}}

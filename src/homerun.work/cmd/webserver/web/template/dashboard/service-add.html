@@ -1,0 +1,295 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9  pl-lg-5 content add-service">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Add Service</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.Name}}error{{end}}">
+                            <label for="name">Service</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter your Service" name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenName}}">
+                            {{if .Errs.Name}}
+                            <div class="error-message">
+                                {{.Errs.Name}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="apptOnly">
+                                Delivery
+                                <a href="javascript:void(0);" data-toggle="popover" data-content="Select “By Appointment” if the service requires an appointment with the client, or “On Demand” if the service is delivered within the duration without an appointment." class="icon-orange toggle-callout" data-placement="top">?</a>
+                            </label>
+                            <select id="apptOnly" class="form-control" name="{{.Inputs.ApptOnly}}">
+                                <option value="on" {{if .ApptOnly}}selected{{end}}>By Appointment</option>
+                                <option value="off" {{if not .ApptOnly}}selected{{end}}>On Demand</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="durationBooking">Duration</label>
+                        <div class="input-group mb-3 {{if .Errs.Duration}}error{{end}}">
+                            <select class="form-control durationBooking" style="display:none;" id="durationBooking" name="{{.Inputs.Duration}}">
+                                <option value="" {{if not .Duration}}selected{{end}} disabled>Please select</option>
+                                {{range .DurationsBooking}}
+                                <option value="{{.ValueStr}}" {{if eq $.Duration .ValueStr}}selected{{end}}>{{.Label}}</option>
+                                {{end}}
+                            </select>
+                            <select class="form-control durationOrder" style="display:none;" name="{{.Inputs.Duration}}">
+                                <option value="" {{if not .Duration}}selected{{end}} disabled>Please select</option>
+                                {{range .DurationsOrder}}
+                                <option value="{{.ValueStr}}" {{if eq $.Duration .ValueStr}}selected{{end}}>{{.Label}}</option>
+                                {{end}}
+                            </select>
+                            {{if .Errs.Duration}}
+                            <div class="error-message">
+                                {{.Errs.Duration}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="service-price">
+                            Price (enter 0 if free)
+                        </label>
+                        <div class="input-group mb-3 {{if .Errs.Price}}error{{end}}">
+                            <input type="number" class="form-control" id="service-price" placeholder="Enter Price" id="service-price" name="{{.Inputs.Price}}" value="{{.Price}}" min="0" step="0.01" />
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="">USD</span>
+                            </div>
+                            {{if .Errs.Price}}
+                            <div class="error-message">
+                                {{.Errs.Price}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label>&nbsp;</label>
+                        <div class="input-group mb-3 {{if .Errs.PriceType}}error{{end}}">
+                            <select class="form-control" name="{{.Inputs.PriceType}}">
+                                {{range .PriceTypes}}
+                                <option value="{{.}}" {{if eq $.PriceType .}}selected{{end}}>{{.}}</option>
+                                {{end}}
+                            </select>
+                            {{if .Errs.PriceType}}
+                            <div class="error-message">
+                                {{.Errs.PriceType}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.LocationType}}error{{end}}">
+                            <label class="" for="locationType">
+                                Service Location
+                                <a href="javascript:void(0);" data-toggle="popover" data-content="Choose “My Location” if clients come to your location for service, “Client Location” if you provide the service at the client’s location, and “Remote” if you provide the service remotely, e.g. over email, phone or video live meeting." class="icon-orange toggle-callout" data-placement="top">?</a>
+                            </label>
+                            <select id="locationType" class="form-control" name="{{.Inputs.LocationType}}">
+                                {{range .ServiceLocations}}
+                                <option value="{{.Type}}" {{if eq .Type $.LocationType}}selected{{end}}>{{.Label}}</option>
+                                {{end}}
+                            </select>
+                            {{if .Errs.LocationType}}
+                            <div class="error-message">
+                                {{.Errs.LocationType}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group {{if .Errs.Location}}error{{end}}">
+                            <label>&nbsp;</label>
+                            <input type="text" class="form-control" style="display:none;" id="svcLocationClient" placeholder="Client will provide the location" disabled>
+                            <input type="text" class="form-control" style="display:none;" id="svcLocationRemote" placeholder="Deliver the service remotely" disabled>
+                            <input type="text" class="form-control" style="display:none;" id="svcLocation" placeholder="Enter your service location" name="{{.Inputs.Location}}" value="{{.Location}}" maxlength="{{.Constants.lenLocation}}">
+                            {{if .Errs.Location}}
+                            <div class="error-message">
+                                {{.Errs.Location}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Description}}error{{end}}">
+                            <label for="desc">Description</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenDescSvc}}" class="form-control" id="desc" rows="4" placeholder="Please describe your service" name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Desc}}</span>/{{.Constants.lenDescSvc}}
+                                </div>
+                            </div>
+                            {{if .Errs.Description}}
+                            <div class="error-message">
+                                {{.Errs.Description}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div id="advance-options-control" class="row">
+                    <div class="col-md-4 mb-5 mt-3">
+                        <button type="button" id="advance-options-link" href="javascript:void(0);" class="btn btn-secondary"><i class="fas fa-plus"></i> Advanced Options</button>
+                    </div>
+                </div>
+                <div id="advance-options" class="row" style="display:none;">
+                    <div class="col-md-4">
+                        <label for="service-padding">
+                            Padding
+                            <a href="javascript:void(0);" data-toggle="popover" data-content="The time you wish to block off between service orders. If the padding is 15 minutes, after a client orders a service from 10am to 11am, the time period of 9:45am to 10am and 11am to 11:15am will be blocked off." class="icon-orange toggle-callout" data-placement="top">?</a>
+                        </label>
+                        <div class="input-group mb-3 {{if .Errs.Padding}}error{{end}}">
+                            <input type="number" class="form-control" id="service-padding" name="{{.Inputs.Padding}}" value="{{.Padding}}" min="0" step="1" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">Min</span>
+                            </div>
+                            {{if .Errs.Padding}}
+                            <div class="error-message">
+                                {{.Errs.Padding}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="service-padding-initial">
+                            Min. Advance Notice
+                            <a href="javascript:void(0);" data-toggle="popover" data-content="The minimum time period in advance for ordering the service. If the value is 1 day, the earliest clients can order the service is the next day." class="icon-orange toggle-callout" data-placement="top">?</a>
+                        </label>
+                        <div class="input-group mb-3 {{if or .Errs.PaddingInitial .Errs.PaddingInitialUnit}}error{{end}}">
+                            <input type="number" class="form-control" id="service-padding-initial" name="{{.Inputs.PaddingInitial}}" value="{{.PaddingInitial}}" min="0" step="1" />
+                            <div class="input-group-append">
+                                <select name="{{.Inputs.PaddingInitialUnit}}">
+                                    {{range .PaddingUnits}}
+                                    <option value="{{.}}" {{if eq $.PaddingInitialUnit .}}selected{{end}}>{{.}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                            {{if .Errs.PaddingInitial}}
+                            <div class="error-message">
+                                {{.Errs.PaddingInitial}}
+                            </div>
+                            {{end}}
+                            {{if .Errs.PaddingInitialUnit}}
+                            <div class="error-message">
+                                {{.Errs.PaddingInitialUnit}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="service-interval">
+                            Interval
+                            <a href="javascript:void(0);" data-toggle="popover" data-content="The interval between times for orders. For example, you can show times every 15, 30, or 60 minutes." class="icon-orange toggle-callout" data-placement="top">?</a>
+                        </label>
+                        <div class="input-group mb-3 {{if .Errs.Interval}}error{{end}}">
+                            <select class="form-control" name="{{.Inputs.Interval}}">
+                                {{range .ServiceIntervals}}
+                                <option value="{{.ValueStr}}" {{if eq $.Interval .ValueStr}}selected{{end}}>{{.Label}}</option>
+                                {{end}}
+                            </select>
+                            {{if .Errs.Interval}}
+                            <div class="error-message">
+                                {{.Errs.Interval}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-3 {{if .Errs.Note}}error{{end}}">
+                            <label for="note">
+                                Confirmation Message
+                                <a href="javascript:void(0);" data-toggle="popover" data-content="Enter a standard message for service order confirmations to clients. You can also customize the message later when creating or confirming each order." class="icon-orange toggle-callout" data-placement="top">?</a>
+                            </label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenNoteSvc}}" class="form-control" id="note" rows="3" placeholder="Enter a custom message for order confirmation" name="{{.Inputs.Note}}">{{.Note}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Note}}</span>/{{.Constants.lenNoteSvc}}
+                                </div>
+                            </div>
+                            {{if .Errs.Note}}
+                            <div class="error-message">
+                                {{.Errs.Note}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div id="zoom-div" class="col-md-12">
+                        {{if .Provider.GetZoomToken}}
+                        <div class="custom-control custom-checkbox mb-4">
+                            <input type="checkbox" class="custom-control-input zoom" id="enableZoom" name="{{.Inputs.EnableZoom}}" {{if .EnableZoom}}checked{{end}}>
+                            <label class="custom-control-label zoom" for="enableZoom">Enable Zoom live conference with clients</label>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Add one or more pictures for the service</label>
+                        <ul id="div-imgs" class="col-md-12"></ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.URLVideo}}error{{end}}">
+                            <label for="video">Add a video</label>
+                            <input type="text" id="video" class="form-control" placeholder="Enter a video URL from YouTube" name="{{.Inputs.URLVideo}}" value="{{.UrlVideo}}" maxlength="{{.Constants.lenUrl}}">
+                            {{if .Errs.URLVideo}}
+                            <div class="error-message">
+                                {{.Errs.URLVideo}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        <a href="{{.Provider.GetURLServices}}" class="btn btn-secondary float-left">Cancel</a>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="module">
+    window.addEventListener('load', function () {
+        handleServiceType('#apptOnly', '.durationBooking', '.durationOrder', '.zoom');
+        setupSvcLocation('#locationType', '#svcLocation', '#svcLocationClient', '#svcLocationRemote', '{{(index .ServiceLocations 1).Type}}', '{{(index .ServiceLocations 2).Type}}', '#zoom-div');
+        $('#advance-options-link').click(function (evt) {
+            $('#advance-options-control').hide();
+            $('#advance-options').show();
+        });
+    });
+</script>
+{{if or .Errs.Padding .Errs.PaddingInitial .Errs.PaddingInitialUnit .Errs.Interval .Errs.Note}}
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#advance-options-link').trigger('click');
+    });
+</script>
+{{end}}
+{{end}}
+{{define "script"}}
+<script src="{{.UrlAssets}}/dashboard/js/jquery-ui.min.js"></script>
+<script type="module">
+    window.addEventListener('load', function () {
+        setupSvcImgWidget('#div-imgs', '', 'Upload Picture (rec. size: {{.Constants.imgSvcWidth}}*{{.Constants.imgSvcHeight}})', '{{.Inputs.Img}}', '', '{{.Inputs.ImgIdx}}');
+    });
+</script>
+{{end}}

@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /dashboard/
+Noindex: /dashboard/
+Disallow: /providers.html
+Noindex: /providers.html
+Sitemap: https://www.homerun.work/sitemap.xml

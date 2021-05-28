@@ -1,0 +1,45 @@
+{{define "title"}}Invoice{{end}}
+{{define "body"}}
+<!-- One Column -->
+<table width="600" class="deviceWidth" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#eeeeed" style="margin:0 auto;">
+    <tr>
+        <td align="left" valign="top" style="padding:0; text-align:left; padding-left:40px; padding-top:60px; padding-bottom:60px;" bgcolor="#ffffff" class="nmp">
+            <a href="{{forceURLAbs .Ctx .UrlDefault}}" target="_blank" style="display:inline-block;"><img src="{{forceURLAbs .Ctx .UrlAssets}}/email/img/logo.png" alt="homerun" border="0" style="display: block; border-radius: 4px;" /></a>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 15px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#1a1a1a;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:300;">
+                Hi {{.Provider.Name}},
+            </p>
+            <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#1a1a1a;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:300;">
+                This is the invoice for ${{.Payment.GetAmount}} for our service, which is due on receipt.
+            </p>
+            <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#1a1a1a;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:300;">
+                Team HomeRun
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="middle" align="center" bgcolor="#FB6D3B" style="background-color:#FB6D3B;border-radius:4px;">
+                        <a class="btn" href="{{forceURLAbs .Ctx .Payment.URL}}" style="font-family: 'Source Sans Pro', Georgia, sans-serif;font-size:24px; color:#ffffff; display:block; padding-top:18px; padding-bottom:22px;font-weight:600; padding-left:25px; padding-right:25px;" target="_blank">
+                            View and Pay Invoice
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td style="opacity:0.1; border:none; border-bottom:solid 1px rgba(26,26,26,0.1); padding-top:15px;">&nbsp;</td>
+                </tr>
+            </table>
+            <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#1a1a1a;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:300;">
+                Any question? Please feel free to <a href="mailto:info@homerun.work">drop us a note</a>.
+            </p>
+        </td>
+    </tr>
+</table><!-- End One Column -->
+{{end}}

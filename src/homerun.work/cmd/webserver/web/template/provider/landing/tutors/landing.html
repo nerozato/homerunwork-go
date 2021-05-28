@@ -1,0 +1,235 @@
+{{define "body"}}
+<div class="landing-page">
+    <div class="landing-hero py-5 py-lg-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-10 col-lg-5">
+                    <div class="inner p-3 p-lg-5">
+                        <h2 class="font-weight-light mb-4">All you need as an online tutor</h2>
+                        <h6 class="orange">Earn more money, and jumpstart your business.</h6>
+                        <h6 class="mb-4">Free to start. $0 commissions.</h6>
+                        <a href="{{addURLType .UrlSignUp .TypeSignUp}}" class="btn btn-primary btn-large">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="landing-benefits py-5 pt-lg-7">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <h2>Benefits of being your own boss as an online tutor with HomeRun</h2>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-3 mb-lg-0">
+                    <img src="{{.UrlAssets}}/provider/img/landing-benefits.png" alt="" class="img-fluid">
+                </div>
+                <div class="col-lg-6">
+                    <ul class="list-unstyled">
+                        <li class="lead">Save up to 30% commission charged by other tutor websites</li>
+                        <li class="lead">Set your own price and schedule for lessons</li>
+                        <li class="lead">Work with clients anytime and anywhere from the convenience of your home</li>
+                        <li class="lead">Facebook marketing assistance</li>
+                        <li class="lead">Own your business website</li>
+                        <li class="lead">Build repeat business from your excellent work</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="landing-features py-5 py-lg-7">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-6 text-center">
+                    <h2>Everything you need to run a successful tutoring business</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-4">
+                    <div class="inner p-3">
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 mb-3 mb-lg-0 text-center">
+                                <i class="fa fa-laptop" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-9 text-center text-lg-left">
+                                <h6>Your own personalized business website</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-4">
+                    <div class="inner p-3">
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 mb-3 mb-lg-0 text-center">
+                                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-9 text-center text-lg-left">
+                                <h6>Online booking, recurring appointments, calendar integration and reminders</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-4">
+                    <div class="inner p-3">
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 mb-3 mb-lg-0 text-center">
+                                <i class="fa fa-rocket" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-9 text-center text-lg-left">
+                                <h6>Easy invoicing for fast payments via Paypal or Credit Cards</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="inner p-3">
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 mb-3 mb-lg-0 text-center">
+                                <i class="fa fa-university" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-9 text-center text-lg-left">
+                                <h6>Immediate direct deposit into your Stripe or Paypal account</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="inner p-3">
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 mb-3 mb-lg-0 text-center">
+                                <i class="fa fa-facebook" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-9 text-center text-lg-left">
+                                <h6>Expert help with advertising on Facebook</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="inner p-3">
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 mb-3 mb-lg-0 text-center">
+                                <i class="fa fa-video-camera" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-9 text-center text-lg-left">
+                                <h6>Seamless integration with Zoom for live video meeting</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="landing-faq py-5 py-lg-7">
+        <div class="container">
+            <div class="row justify-content-center mb-4">
+                <div class="col-12 text-center text-lg-left">
+                    <h2>How it works</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="row justify-content-center">
+                        <div class="col-10 col-lg-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <span>1</span>
+                                </div>
+                                <div class="col-lg-10 text-center text-lg-left">
+                                    <p>Create your business website in minutes by answering a few questions.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-10 col-lg-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <span>2</span>
+
+                                </div>
+                                <div class="col-lg-10 text-center text-lg-left">
+                                    <p>Promote your website on social media by sharing with your followers, or use Facebook ads with help from our experts.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-10 col-lg-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <span>3</span>
+                                </div>
+                                <div class="col-lg-10 text-center text-lg-left">
+                                    <p>Clients can easily book and schedule lessons directly on your website.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-10 col-lg-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <span>4</span>
+                                </div>
+                                <div class="col-lg-10 text-center text-lg-left">
+                                    <p>Lesson reminders will be sent automatically to you and clients via email and text.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row justify-content-center">
+                        <div class="col-10 col-lg-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <span>5</span>
+                                </div>
+                                <div class="col-lg-10 text-center text-lg-left">
+                                    <p>Open Zoom with the appointment link to connect with your client at the time of the lesson.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-10 col-lg-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <span>6</span>
+                                </div>
+                                <div class="col-lg-10 text-center text-lg-left">
+                                    <p>After each lesson, send an invoice directly to your client with just the click of a button.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-10 col-lg-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <span>7</span>
+                                </div>
+                                <div class="col-lg-10 text-center text-lg-left">
+                                    <p>Payments can be received via PayPal or Stripe. Note: Your payment processor may charge a processing fee (approx. 3%).</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-10 col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <span>8</span>
+                                </div>
+                                <div class="col-lg-10 text-center text-lg-left">
+                                    <p>Discount codes can be set up for repeat clients booking recurring lessons.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="landing-signup py-5 py-lg-7">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-4 text-center">
+                    <h4>Start your business by teaching people new skills today!</h4>
+                    <a href="{{addURLType .UrlSignUp .TypeSignUp}}" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

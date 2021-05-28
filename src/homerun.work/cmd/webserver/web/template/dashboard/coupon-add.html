@@ -1,0 +1,140 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content edit-client">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Add Coupon</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Code}}error{{end}}">
+                            <label for="code">Coupon Code:</label>
+                            <input type="text" class="form-control" id="code" placeholder="Enter the unique code" name="{{.Inputs.Code}}" value="{{.Code}}" maxlength="{{.Constants.lenCodeCoupon}}">
+                            {{if .Errs.Code}}
+                            <div class="error-message">
+                                {{.Errs.Code}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="val">Discount:</label>
+                        <div class="input-group {{if or .Errs.Value .Errs.Type}}error{{end}}">
+                            <input type="number" min="0" class="form-control" id="val" placeholder="Enter the discount" name="{{.Inputs.Value}}" value="{{.Value}}" step="0.01">
+                            <div class="input-group-append">
+                                <select class="form-control" name="{{.Inputs.Type}}">
+                                    {{range .CouponTypes}}
+                                    <option value="{{.}}" {{if eq $.Type .}}selected{{end}}>{{.}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                            {{if .Errs.Value}}
+                            <div class="error-message">
+                                {{.Errs.Value}}
+                            </div>
+                            {{end}}
+                            {{if .Errs.Type}}
+                            <div class="error-message">
+                                {{.Errs.Type}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group {{if .Errs.Start}}error{{end}}">
+                            <label for="start">From:</label>
+                            <input type="text" class="form-control" id="start" name="{{.Inputs.Start}}" value="{{.Start}}">
+                            {{if .Errs.Start}}
+                            <div class="error-message">
+                                {{.Errs.Start}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group {{if .Errs.End}}error{{end}}">
+                            <label for="end">End:</label>
+                            <input type="text" class="form-control" id="end" name="{{.Inputs.End}}" value="{{.End}}">
+                            {{if .Errs.End}}
+                            <div class="error-message">
+                                {{.Errs.End}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.SvcID}}error{{end}}">
+                            <label for="svc">Service:</label>
+                            <select class="form-control" name="{{.Inputs.SvcID}}">
+                                <option value="" {{if not .SvcId}}selected{{end}}>All Services</option>
+                                {{range .Svcs}}
+                                <option value="{{.ID}}" {{if eq $.SvcId .ID.String}}selected{{end}}>{{.Name}}</option>
+                                {{end}}
+                            </select>
+                            {{if .Errs.SvcID}}
+                            <div class="error-message">
+                                {{.Errs.SvcID}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="end">Clients:</label>
+                            <select class="form-control" name="{{.Inputs.Flag}}">
+                                <option value="off" {{if not $.Flag}}selected{{end}}>All Clients</option>
+                                <option value="on" {{if $.Flag}}selected{{end}}>New Clients</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-3 {{if .Errs.Description}}error{{end}}">
+                            <label for="desc">Description:</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenDescCoupon}}" class="form-control" id="desc" rows="3" placeholder="Enter a description" name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Desc}}</span>/{{.Constants.lenDescCoupon}}
+                                </div>
+                            </div>
+                            {{if .Errs.Description}}
+                            <div class="error-message">
+                                {{.Errs.Description}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        <a href="{{.Provider.GetURLCoupons}}" class="btn btn-secondary float-left">Cancel</a>
+                    </div>
+                    <div class="col-6">
+                        <input type="hidden" id="timeZone" name="{{.Inputs.TimeZone}}">
+                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#start').datepicker();
+        $('#start').datepicker('setStartDate', new Date());
+        $('#end').datepicker();
+        $('#end').datepicker('setStartDate', new Date());
+        $('#timeZone').val(getTimeZone());
+    });
+</script>
+{{end}}

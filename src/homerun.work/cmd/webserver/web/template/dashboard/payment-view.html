@@ -1,0 +1,215 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row justify-content-center">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-md-9 py-lg-5 py-4 pl-lg-5 content ">
+                <h2 class="semibold mb-4">View Invoice</h2>
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Invoice</h5>
+                    <hr class="mt-2 mb-2" />
+                    {{if .Payment.IsCaptured}}
+                    <p class="mb-1">
+                        <span class="font-weight-bold">Paid: {{.Payment.FormatCaptured .TimeZone}}</span>
+                    </p>
+                    {{end}}
+                    <p class="mb-1">
+                        <span class="text-muted">Invoice #: {{.Payment.FriendlyID}}</span>
+                    </p>
+                    {{if .Payment.IsInvoiced}}
+                    <p class="mb-1">
+                        <span class="text-muted">Invoiced: {{.Payment.FormatInvoiced .TimeZone}}</span>
+                    </p>
+                    {{end}}
+                    <p class="mb-1">
+                        <span class="text-muted">Amount: ${{.Payment.GetAmount}}</span>
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Recipient</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p class="mb-1">
+                        <span class="text-muted">{{.Payment.Name}}</span>
+                    </p>
+                    <p class="mb-1">
+                        <span class="text-muted">{{.Payment.Email}}</span>
+                    </p>
+                    {{if .Payment.Phone}}
+                    <p class="mb-1">
+                        <span class="text-muted">{{.Payment.Phone}}</span>
+                    </p>
+                    {{end}}
+                </div>
+                {{if .Payment.Note}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Note to Recipient</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p class="mb-1">
+                        <span class="text-muted">{{.Payment.FormatNote}}</span>
+                    </p>
+                </div>
+                {{end}}
+                {{if .Book}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Time</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p>
+                        {{.Book.FormatDateTime .TimeZone}}
+                        {{if .Book.IsRecurring}}
+                        &nbsp;&nbsp;&nbsp;
+                        <span class="repeat-text"></span>
+                        {{end}}
+                    </p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table tale-bordered">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0 pl-0">Service</th>
+                                <th width="100" class="border-top-0">
+                                    Time
+                                </th>
+                                <th width="80" class="border-top-0">
+                                    Price
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="pl-0">
+                                    <div class="media py-2">
+                                        <img src="{{.Svc.GetURLImgMain}}" alt="" width="100px" class="img-fluid rounded mr-3">
+                                        <div lang="media-body">
+                                            <p class="font-weight-bold mb-2">{{.Book.ServiceName}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{.Book.ServiceDurationLabel}}</td>
+                                <td>{{.Book.FormatServicePrice}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {{if .Book.Description}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Special Request</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p>{{.Book.FormatDescription}}</p>
+                </div>
+                {{end}}
+                {{if .Book.ProviderNote}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Message to Client</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p>{{.Book.FormatProviderNote}}</p>
+                </div>
+                {{end}}
+                {{else if .Svc}}
+                <div class="table-responsive">
+                    <table class="table tale-bordered">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0 pl-0">Service</th>
+                                <th width="100" class="border-top-0">
+                                    Time
+                                </th>
+                                <th width="80" class="border-top-0">
+                                    Price
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="pl-0">
+                                    <div class="media py-2">
+                                        <img src="{{.Svc.GetURLImgMain}}" alt="" width="100px" class="img-fluid rounded mr-3">
+                                        <div lang="media-body">
+                                            <p class="font-weight-bold mb-2">{{.Svc.Name}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{.Svc.FormatDuration}}</td>
+                                <td>{{.Svc.FormatPrice}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {{end}}
+                {{if not .Payment.IsCaptured}}
+                <div class="mb-3">
+                    <p>
+                        To collect payment via another app (such as text chat), copy the payment link, and paste it in that app to send to the recipient or share the QR code.
+                        <br>
+                        <br>
+                        <input type="text" id="payment-link" value="{{forceURLAbs .Ctx .Payment.URL}}" style="display:none;">
+                        <a class="copy-link" href="javascript:void(0);" onclick="clipLink('payment-link', '#copied-span');">{{forceURLAbs .Ctx .Payment.URL}} <i class="far fa-clone icon-orange ml-3" aria-hidden="true"></i></a><span id="copied-span" class="ml-2"></span>
+                    </p>
+                </div>
+                <div class="mb-5">
+                    <div id="qr-code"></div>
+                </div>
+                <div class="mb-4">
+                    <button type="button" class="btn btn-secondary mr-3" onclick="$('#msg-modal-confirm').modal('show');">Mark as Paid</button>
+                    {{if .Book}}
+                    <a href="{{.Book.GetURLPayment}}" class="btn btn-secondary mr-3">Resend Invoice</a>
+                    {{end}}
+                    <button type="button" class="btn btn-secondary mr-3" onclick="$('#msg-modal-confirm-delete').modal('show');">Delete</button>
+                </div>
+                {{end}}
+                <div class="mb-4">
+                    <a href="{{.Provider.GetURLPayments}}" class="btn btn-primary mr-3">Done</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{block "confirmModal" .}}
+    {{end}}
+    <!-- Delete Confirm Modal -->
+    <div class="modal fade" id="msg-modal-confirm-delete" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabelDel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabelDel">Continue?</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modalConfirmMsgDel" class="mb-0 px-3 py-3">
+                                    Are you sure you want to delete the invoice?
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepDel}}">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{end}}
+{{define "script"}}
+{{if not .Payment.IsCaptured}}
+<script src="{{.UrlAssets}}/dashboard/js/kjua-0.9.0.min.js"></script>
+<script type="module">
+    window.addEventListener('load', function () {
+        var img = new Image();
+        img.src = '{{forceURLAbs .Ctx .Provider.GetURLImgLogo}}';
+        img.crossOrigin = 'Anonymous';
+        $('#qr-code').kjua({
+            ecLevel: 'Q',
+            size: 125,
+            text: '{{forceURLAbs .Ctx .Payment.URL}}',
+            render: 'svg',
+            mode: 'image',
+            mSize: 25,
+            image: img
+        });
+    });
+</script>
+{{end}}
+{{end}}

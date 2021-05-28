@@ -1,0 +1,95 @@
+{{define "body"}}
+<form id="form-campaign" method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content edit-client">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Add Campaign</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <p>You must have a Facebook Page and an Ad Account.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <p>Do you have a Facebook Page? To create your Facebook Page, <a href="">follow the instructions</a>.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.URLFacebook}}error{{end}}">
+                            <label>
+                                <input id="page" type="radio" class="form-check-input" name="{{.Inputs.HasFacebookPage}}" value="true" {{if .HasFacebookPage}}checked{{end}}>
+                                <span>Yes - My FB Page URL:</span>
+                                <input type="text" class="form-control" placeholder="Enter your Facebook Page URL" name="{{.Inputs.URLFacebook}}" value="{{.UrlFacebookProvider}}" maxlength="{{.Constants.lenUrl}}">
+                            </label>
+                            {{if .Errs.URLFacebook}}
+                            <div class="error-message">
+                                {{.Errs.URLFacebook}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>
+                                <input id="page" type="radio" class="form-check-input" name="{{.Inputs.HasFacebookPage}}" value="false" {{if not .HasFacebookPage}}checked{{end}}>
+                                <span>No - I need help to create my Facebook Page for {{.Constants.campaignFeeFacebookPage}}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <p>Do you have a Facebook Ad Account? To create your Facebook Ad Account, <a href="">follow the instructions</a>.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>
+                                <input id="page" type="radio" class="form-check-input" name="{{.Inputs.HasFacebookAdAccount}}" value="true" {{if .HasFacebookAdAccount}}checked{{end}}>
+                                <span>Yes</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>
+                                <input id="page" type="radio" class="form-check-input" name="{{.Inputs.HasFacebookAdAccount}}" value="false" {{if not .HasFacebookAdAccount}}checked{{end}}>
+                                <span>No - I need help to create my Facebook Ad Account for {{.Constants.campaignFeeFacebookAdAccount}}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        <a href="{{.Provider.GetURLCampaignAddStep1 .Campaign.ID}}" class="btn btn-secondary float-left">Back</a>
+                    </div>
+                    <div class="col-6">
+                        <input type="hidden" name="{{.Inputs.ID}}" value="{{.Campaign.ID}}">
+                        <button type="submit" class="btn btn-primary float-right">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{end}}

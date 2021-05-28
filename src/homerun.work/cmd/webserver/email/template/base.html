@@ -1,0 +1,301 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>
+        {{block "title" .}}
+        {{end}}
+    </title>
+    <style type="text/css">
+        .ReadMsgBody {
+            width: 100%;
+            background-color: #ffffff;
+        }
+
+        .ExternalClass {
+            width: 100%;
+            background-color: #ffffff;
+        }
+
+        body {
+            width: 100%;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Source Sans Pro', Georgia, Times, serif
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        @media only screen and (max-width: 640px) {
+            .deviceWidth {
+                width: 440px !important;
+                padding: 0;
+            }
+
+            .center {
+                text-align: center !important;
+            }
+
+            .m-none {
+                max-width: 20px !important;
+            }
+
+            .btn {
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+                font-size: 18px !important;
+                padding-top: 10px !important;
+                padding-bottom: 10px !important;
+                display: inline-block !important;
+            }
+
+            h1.title {
+                font-size: 22px !important;
+            }
+
+            img.monkey {
+                max-width: 30px !important;
+            }
+
+            p.paragraph {
+                font-size: 17px !important;
+            }
+
+            p.small-paragraph {
+                font-size: 15px !important;
+            }
+
+            p.copyright {
+                font-size: 15px !important;
+            }
+
+            p.footer-link a {
+                font-size: 15px !important;
+            }
+
+            td.help-center a {
+                font-size: 11px !important;
+            }
+
+            td.m-block {
+                width: 100% !important;
+                display: block !important;
+                padding-bottom: 5px !important;
+            }
+
+            td.m-block td {
+                font-size: 17px !important;
+            }
+
+            .nmp {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+
+            .nmtp {
+                padding-top: 0px !important;
+                padding-bottom: 0px !important;
+            }
+
+            img.thanks {
+                max-width: 115px !important;
+                height: auto !important;
+            }
+
+            img.thumb {
+                max-width: 80px !important;
+                height: auto !important;
+            }
+        }
+
+        @media only screen and (max-width: 479px) {
+            .deviceWidth {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 280px !important;
+                padding: 0;
+            }
+
+            .center {
+                text-align: center !important;
+            }
+
+            .m-none {
+                display: none !important;
+            }
+
+            .nmp {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+
+            .nmtp {
+                padding-top: 0px !important;
+                padding-bottom: 0px !important;
+            }
+
+            td.service {
+                width: 64% !important;
+            }
+
+            td.time {
+                width: 18% !important;
+            }
+
+            td.price {
+                width: 18% !important;
+            }
+
+            img.thanks {
+                max-width: 116px !important;
+                height: auto !important;
+            }
+
+            .small-text {
+                font-size: 17px !important;
+            }
+        }
+
+        /* Remove space around the email design. */
+        html,
+        body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        /* Stop Outlook resizing small text. */
+        * {
+            -ms-text-size-adjust: 100%;
+        }
+
+        /* Stop Outlook from adding extra spacing to tables. */
+        table,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        /* Use a better rendering method when resizing images in Outlook IE. */
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        /* Prevent Windows 10 Mail from underlining links. Styles for underlined links should be inline. */
+        a {
+            text-decoration: none;
+        }
+
+        @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap');
+    </style>
+</head>
+
+<body bgcolor="#F5F8FA" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" style="font-family: 'Source Sans Pro', Georgia, Times, serif;-moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased; font-smoothing: antialiased;margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color:#F5F8FA;">
+    <!-- Wrapper -->
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+        <tr>
+            <td width="100%" valign="top" bgcolor="#F5F8FA" class="nmtp" style="padding-top:25px">
+                {{block "body" .}}
+                {{end}}
+                <div style="height:15px;margin:0 auto;">&nbsp;</div><!-- spacer -->
+                <!-- 4 Columns -->
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+                    <tr>
+                        <td bgcolor="#F5F8FA" style="padding:30px 0">
+                            <table width="600" border="0" cellpadding="10" cellspacing="0" align="center" class="deviceWidth" style="margin:0 auto;">
+                                <tr>
+                                    <td>
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="deviceWidth">
+                                            <tr>
+                                                <td valign="top" style="font-size: 11px; color: #f1f1f1; color:#999; font-family: Arial, sans-serif; padding-bottom:20px; text-align:center;" class="center">
+                                                    {{block "footer" .}}
+                                                    {{end}}
+                                                    <p class="copyright" style="color:#000000;opacity:0.5;font-size:17px;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:400;">
+                                                        Copyright &copy; {{.CurrentYear}} HomeRun. All Rights Reserved.
+                                                    </p>
+                                                    {{block "footerLink" .}}
+                                                    {{end}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="deviceWidth">
+                                            <tr>
+                                                <td valign="top" style="font-size: 11px; color: #f1f1f1; font-weight: normal; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 26px; vertical-align: top; text-align:center" class="center">
+                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                        {{if and .Provider (not .ShowHomeRun)}}
+                                                        <tr>
+                                                            <td width="100" class="m-none">&nbsp;</td>
+                                                            <td>
+                                                                {{if .Provider.URLFacebook}}
+                                                                <a href="{{forceURLAbs .Ctx .Provider.URLFacebook}}" target="_blank"><img src="{{forceURLAbs .Ctx .UrlAssets}}/email/img/fb.png" width="19" height="18" alt="facebook" border="0" /></a>
+                                                                {{end}}
+                                                            </td>
+                                                            <td>
+                                                                {{if .Provider.URLInstagram}}
+                                                                <a href="{{forceURLAbs .Ctx .Provider.URLInstagram}}" target="_blank"><img src="{{forceURLAbs .Ctx .UrlAssets}}/email/img/instagram.png" width="19" height="18" alt="instagram" border="0" /></a>
+                                                                {{end}}
+                                                            </td>
+                                                            <td>
+                                                                {{if .Provider.URLLinkedIn}}
+                                                                <a href="{{forceURLAbs .Ctx .Provider.URLLinkedIn}}" target="_blank"><img src="{{forceURLAbs .Ctx .UrlAssets}}/email/img/linkedin.png" width="21" height="18" alt="linkedin" border="0" /></a>
+                                                                {{end}}
+                                                            </td>
+                                                            <td>
+                                                                {{if .Provider.URLTwitter}}
+                                                                <a href="{{forceURLAbs .Ctx .Provider.URLTwitter}}" target="_blank"><img src="{{forceURLAbs .Ctx .UrlAssets}}/email/img/twitter.png" width="21" height="18" alt="twitter" border="0" /></a>
+                                                                {{end}}
+                                                            </td>
+                                                            <td>
+                                                                {{if .Provider.URLWeb}}
+                                                                <a href="{{forceURLAbs .Ctx .Provider.URLWeb}}" target="_blank"><img src="{{forceURLAbs .Ctx .UrlAssets}}/email/img/globe.png" width="21" height="18" alt="provider" border="0" /></a>
+                                                                {{end}}
+                                                            </td>
+                                                            <td width="100" class="m-none">&nbsp;</td>
+                                                        </tr>
+                                                        {{else}}
+                                                        <tr>
+                                                            <td width="100" class="m-none">&nbsp;</td>
+                                                            <td>
+                                                                {{if .UrlFacebook}}
+                                                                <a href="{{forceURLAbs .Ctx .UrlFacebook}}" target="_blank"><img src="{{forceURLAbs .Ctx .UrlAssets}}/email/img/fb.png" width="19" height="18" alt="Facebook" title="Facebook" border="0" /></a>
+                                                                {{end}}
+                                                            </td>
+                                                            <td>
+                                                                {{if .UrlInstagram}}
+                                                                <a href="{{forceURLAbs .Ctx .UrlInstagram}}" target="_blank"><img src="{{forceURLAbs .Ctx .UrlAssets}}/email/img/instagram.png" width="19" height="18" alt="Instagram" title="Instagram" border="0" /></a>
+                                                                {{end}}
+                                                            </td>
+                                                            <td>
+                                                                {{if .UrlTwitter}}
+                                                                <a href="{{forceURLAbs .Ctx .UrlTwitter}}" target="_blank"><img src="{{forceURLAbs .Ctx .UrlAssets}}/email/img/twitter.png" width="21" height="18" alt="Twitter" title="Twitter" border="0" /></a>
+                                                                {{end}}
+                                                            </td>
+                                                            <td width="100" class="m-none">&nbsp;</td>
+                                                        </tr>
+                                                        {{end}}
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table><!-- End 4 Columns -->
+            </td>
+        </tr>
+    </table> <!-- End Wrapper -->
+    <div style="display:none; white-space:nowrap; font:15px courier; color:#ffffff;">
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    </div>
+</body>
+
+</html>

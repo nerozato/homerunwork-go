@@ -1,0 +1,150 @@
+{{define "body"}}
+<div class="service-single mt-lg-5 mt-4 mb-lg-5 mb-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 left pr-lg-5">
+                {{if .Svc.GetURLImgs}}
+                <ul class="slider-content list-unstyled">
+                    {{range .Svc.GetURLImgs}}
+                    <li><img src="{{.}}" alt="" class="img-fluid rounded"></li>
+                    {{end}}
+                </ul>
+                {{if gt (len .Svc.GetURLImgs) 1}}
+                <ul class="slider-navigation list-unstyled">
+                    {{range .Svc.GetURLImgs}}
+                    <li><img src="{{.}}" alt="" class="img-fluid rounded"></li>
+                    {{end}}
+                </ul>
+                {{end}}
+                {{else}}
+                <img src="{{.Svc.GetURLImgMain}}" alt="" class="img-fluid rounded">
+                {{end}}
+            </div>
+            <div class="col-lg-6 right pl-lg-5">
+                <h1 class="black mb-3">{{.Svc.Name}}</h1>
+                <div class="rating mb-3">
+                </div>
+                <div class="price">
+                    <h3 class="semibold"><span class="regular mr-1"></span>{{.Svc.FormatPrice}}</h3>
+                </div>
+                <div class="product-info mt-4 mb-2">
+                    <div class="row align-items-center mb-3">
+                        <div class="col-3">
+                            <span>Duration:</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="form-check form-check-inline">
+                                <label>
+                                    <input type="radio" class="form-check-input" name="optradio" disabled>
+                                    <span class="disabled">{{.Svc.FormatDuration}}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <span>Description:</span>
+                        </div>
+                        <div class="col-9">
+                            <p>{{.Svc.Description}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <span>Location:</span>
+                        </div>
+                        <div class="col-9">
+                            <p>
+                                {{if .Svc.LocationType.IsLocationClient}}
+                                At Client Location
+                                {{else if .Svc.LocationType.IsLocationProvider}}
+                                {{.Svc.Location}}
+                                {{else}}
+                                {{if and .Provider.GetZoomToken .Svc.EnableZoom}}
+                                Remote via Zoom Live Meeting
+                                {{else}}
+                                Remote
+                                {{end}}
+                                {{end}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-toolbar action-toolbar py-3 py-lg-4">
+                    <a href="{{.Svc.GetURLBooking}}" class="btn btn-primary mr-1">Order It</a>
+                </div>
+                {{if .Provider.SupportsPayment}}
+                <div class="row align-items-center">
+                    <div class="col-12">
+                        <h5 class="bold text-uppercase mt-3 mb-3">Pay by QR Code</h5>
+                        <div id="qr-code"></div>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+        {{if .Svc.HTMLVideoPlayer}}
+        <div class="row mt-4 embed-video">
+            {{.Svc.FormatVideoPlayerHTML}}
+        </div>
+        {{end}}
+    </div>
+</div>
+<div class="service-list related-services list-inline mb-lg-5 mb-4">
+    <div class="container">
+        {{if gt (len .Svcs) 0}}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card no-bottom-radius no-bottom-border py-3 px-4">
+                    <h5 class="bold mb-0">More Services</h5>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card no-top-radius py-4 px-4">
+                    <div class="row">
+                        {{range .Svcs}}
+                        <!--service start-->
+                        <div class="col-lg-3 mb-4 mb-lg-0 border-right service">
+                            <div class="editable-block card-image-other-svc-bg" style="background-image:url({{.GetURLImgMain}});"> </div>
+                            <div class="card-body">
+                                <h4 class="black">{{.Name}}</h4>
+                                <p>{{.Description}}</p>
+                                <div class="btn-toolbar" role="group">
+                                    <span class="price medium">{{.FormatPrice}}</span>
+                                    <a href="{{.GetURLService}}" class="btn btn-quaternary ml-auto">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--service end-->
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</div>
+{{end}}
+{{define "script"}}
+{{if .Provider.SupportsPayment}}
+<script src="{{.UrlAssets}}/dashboard/js/kjua-0.9.0.min.js"></script>
+<script type="module">
+    window.addEventListener('load', function () {
+        var img = new Image();
+        img.src = '{{forceURLAbs .Ctx .Provider.GetURLImgLogo}}';
+        img.crossOrigin = 'Anonymous';
+        $('#qr-code').kjua({
+            ecLevel: 'Q',
+            size: 125,
+            text: '{{forceURLAbs .Ctx .Url}}',
+            render: 'svg',
+            mode: 'image',
+            mSize: 25,
+            image: img
+        });
+    });
+</script>
+{{end}}
+{{end}}

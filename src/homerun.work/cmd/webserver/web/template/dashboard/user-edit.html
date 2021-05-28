@@ -1,0 +1,51 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content edit-client">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Edit Team Member</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <p>Email: {{.User.Login}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <p>
+                                Registered:
+                                {{if .User.User}}
+                                Yes
+                                {{else}}
+                                No
+                                {{end}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <input type="hidden" name="{{.Inputs.UserID}}" value="{{.User.ID}}">
+                    <div class="col-sm-4">
+                        <a href="{{.Provider.GetURLUsers}}" class="btn btn-primary btn-block float-left mb-1">Done</a>
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-secondary btn-block float-right mb-1" onclick="$('#msg-modal-confirm').modal('show');"><i class="fas fa-trash mr-2" aria-hidden="true"></i> Delete User</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{block "confirmModal" .}}
+    {{end}}
+</form>
+{{end}}

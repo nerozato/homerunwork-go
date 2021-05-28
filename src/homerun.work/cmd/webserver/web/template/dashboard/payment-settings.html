@@ -1,0 +1,141 @@
+{{define "body"}}
+<form method="{{if not .Type}}GET{{else}}POST{{end}}" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content appointments appointment-2">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="payment-settings">
+                    {{if not .Type}}
+                    <div class="row">
+                        <div class="col-md-12 mb-4 mb-lg-5">
+                            <div>
+                                <h5>Select your preferred payment services to accept payments directly from clients.</h5>
+                                <h5>Note: The payment services may charge transaction fees. Please check with each service for details.</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center payment-paypal mt-4">
+                        <div class="col-md-3">
+                            <img src="{{.UrlAssets}}/dashboard/img/paypal.png" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="my-3 my-md-0">Accepts Visa, Mastercard, PayPal, Venmo. Requires a business PayPal account.</h6>
+                        </div>
+                        <div class="col-md-3">
+                            {{if .Provider.PayPalEmail}}
+                            <button type="submit" class="btn btn-secondary btn-block" name="{{.Inputs.Type}}" value="{{.Types.TypePayPal}}">Remove</button>
+                            {{else}}
+                            <button type="submit" class="btn btn-primary btn-block" name="{{.Inputs.Type}}" value="{{.Types.TypePayPal}}">Activate</button>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="row align-items-center payment-stripe mt-4">
+                        <div class="col-md-3">
+                            <img src="{{.UrlAssets}}/dashboard/img/stripe.png" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="my-3 my-md-0">Accepts ACH, Visa, Mastercard, Amex, Discover and more. Requires a Stripe merchant account.</h6>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            {{if .Provider.StripeToken}}
+                            <button type="submit" class="btn btn-secondary btn-block" name="{{.Inputs.Type}}" value="{{.Types.TypeStripe}}">Remove</button>
+                            {{else}}
+                            <button type="submit" class="btn btn-primary btn-block" name="{{.Inputs.Type}}" value="{{.Types.TypeStripe}}">Activate</button>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="row align-items-center payment-zelle mt-4">
+                        <div class="col-md-3">
+                            <img src="{{.UrlAssets}}/dashboard/img/zelle.png" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="my-3 my-md-0">Accept direct money transfer to your bank account with no fees at most banks (please check with your bank for details).</h6>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            {{if .Provider.ZelleID}}
+                            <button type="submit" class="btn btn-secondary btn-block" name="{{.Inputs.Type}}" value="{{.Types.TypeZelle}}">Remove</button>
+                            {{else}}
+                            <button type="submit" class="btn btn-primary btn-block" name="{{.Inputs.Type}}" value="{{.Types.TypeZelle}}">Activate</button>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{else if eq .Type .Types.TypePayPal}}
+                    <div class="row align-items-center justify-content-center paypal-details mt-5">
+                        <div class="col-md-6 text-center">
+                            <input type="hidden" name="{{.Inputs.Type}}" value="{{.Type}}">
+                            <img src="{{.UrlAssets}}/dashboard/img/paypal.png" alt="" class="img-fluid mb-2">
+                            <p>Accepts Visa, Mastercard, PayPal, Venmo. Requires a business PayPal account.</p>
+                            <div class="form-group {{if .Errs.Email}}error{{end}}">
+                                {{if .Provider.PayPalEmail}}
+                                <label for="paypal-email">Your PayPal business account email:</label>
+                                <input type="email" class="form-control" id="paypal-email" value="{{.Email}}" disabled>
+                                {{else}}
+                                <label for="paypal-email">Enter your PayPal business account email:</label>
+                                <input type="email" class="form-control" id="paypal-email" placeholder="Enter email" name="{{.Inputs.Email}}" value="{{.Email}}">
+                                {{if .Errs.Email}}
+                                <div class="error-message">
+                                    {{.Errs.Email}}
+                                </div>
+                                {{end}}
+                                {{end}}
+                            </div>
+                            {{if .Provider.PayPalEmail}}
+                            <button type="button" class="btn btn-secondary mt-3" onclick="$('#msg-modal-confirm').modal('show');">Remove</button>
+                            {{else}}
+                            <button type="button" class="btn btn-primary mt-3" onclick="$('#msg-modal-confirm').modal('show');">Activate</button>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{else if eq .Type .Types.TypeStripe}}
+                    <div class="row align-items-center justify-content-center stripe-details mt-5">
+                        <div class="col-md-6 text-center">
+                            <input type="hidden" name="{{.Inputs.Type}}" value="{{.Type}}">
+                            <img src="{{.UrlAssets}}/dashboard/img/stripe.png" alt="" class="img-fluid mb-2">
+                            <p>Accepts ACH, Visa, Mastercard, Amex, Discover and more. Requires a Stripe merchant account.</p>
+                            {{if .Provider.StripeToken}}
+                            <button type="button" class="btn btn-secondary mt-3" onclick="$('#msg-modal-confirm').modal('show');">Remove</button>
+                            {{else}}
+                            <button type="button" class="btn btn-primary mt-3" onclick="$('#msg-modal-confirm').modal('show');">Activate</button>
+                            <p class="small pt-3">Stripe charges 2.9% + $0.30 processing fee for credit card payments, and only 0.80% for ACH payments. By encouraging your clients to pay with ACH, you can save on processing fees.</p>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{else if eq .Type .Types.TypeZelle}}
+                    <div class="row align-items-center justify-content-center zelle-details mt-5">
+                        <div class="col-md-6 text-center">
+                            <input type="hidden" name="{{.Inputs.Type}}" value="{{.Type}}">
+                            <img src="{{.UrlAssets}}/dashboard/img/zelle.png" alt="" class="img-fluid mb-2">
+                            <p>Accept direct money transfer to your bank account with no fees at most banks (please check with your bank for details).</p>
+                            <div class="form-group {{if .Errs.Email}}error{{end}}">
+                                {{if .Provider.ZelleID}}
+                                <label for="zelle-id">Your email or phone number:</label>
+                                <input type="email" class="form-control" id="zelle-id" value="{{.Id}}" disabled>
+                                {{else}}
+                                <label for="zelle-id">Enter your email or phone number:</label>
+                                <input type="text" class="form-control" id="zelle-id" placeholder="Enter email or phone number" name="{{.Inputs.ID}}" value="{{.Id}}">
+                                {{if .Errs.ZelleID}}
+                                <div class="error-message">
+                                    {{.Errs.ZelleID}}
+                                </div>
+                                {{end}}
+                                {{end}}
+                            </div>
+                            {{if .Provider.ZelleID}}
+                            <button type="button" class="btn btn-secondary mt-3" onclick="$('#msg-modal-confirm').modal('show');">Remove</button>
+                            {{else}}
+                            <button type="button" class="btn btn-primary mt-3" onclick="$('#msg-modal-confirm').modal('show');">Activate</button>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{block "confirmModal" .}}
+    {{end}}
+</form>
+{{end}}

@@ -1,0 +1,105 @@
+{{define "title"}}Contact Message{{end}}
+{{define "body"}}
+<!-- One Column -->
+<table width="600" class="deviceWidth" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#eeeeed" style="margin:0 auto;">
+    <tr>
+        <td align="left" valign="top" style="padding:0; text-align:left; padding-left:40px; padding-top:60px; padding-bottom:60px;" bgcolor="#ffffff" class="nmp">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="middle" width="13%">
+                        <a href="{{forceURLAbs .Ctx .Provider.GetURLProvider}}" target="_blank" style="display:inline-block;">
+                            <img src="{{forceURLAbs .Ctx .Provider.GetURLImgLogo}}" alt="homerun" width="60" height="60" border="0" style="display: inline-block; border-radius: 4px;" />
+                        </a>
+                    </td>
+                    <td valign="middle" width="87%" style="padding-left:10px;">
+                        <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#303030;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:400;">{{.Provider.Name}}</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#303030;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:400;">
+                Hey <strong style="font-weight:600;">{{.Provider.User.FirstName}}</strong>,
+            </p>
+            <p class="paragraph" style="font-size:20px; line-height:125%; font-weight:400; color:#303030;font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:400;">
+                You have received a message. You can send a response by replying to this email.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td width="100%" class="m-block">
+                        <table class="m-block" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px;">
+                                    From
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:400; padding-top:3px;">
+                                    {{.Client.Name}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:400; padding-top:3px;">
+                                    {{.Client.Email}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:400; padding-top:3px;">
+                                    {{.Client.Phone}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: 'Source Sans Pro', Georgia, Times, serif; line-height: 24px; vertical-align: top; padding:10px 40px 40px 40px; text-align:left;" bgcolor="#ffffff" class="nmp">
+            <table class="deviceWidth" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td valign="top" width="50%" class="m-block">
+                        <table class="m-block" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="border-bottom:solid 1px #e8e8e8; color:#1a1a1a; font-size:20px; font-weight:600; padding-bottom:5px;">
+                                    Message
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none; color:#1a1a1a; font-size:19px; font-weight:400; padding-top:3px;">
+                                    {{.Text}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table><!-- End One Column -->
+{{end}}
+{{define "footer"}}
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td width="100" class="m-none">&nbsp;</td>
+        <td class="help-center">
+            <a href="{{forceURLAbs .Ctx .Provider.GetURLDashboard}}" target="_blank" style="font-size:14px;white-space:nowrap;color:#1a1a1a; font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:700; text-transform:uppercase;">
+                My Dashboard
+            </a>
+        </td>
+        <td style="font-size:14px; color:#1a1a1a; font-weight:bold; text-transform:uppercase;">&bull;</td>
+        <td class="help-center">
+            <a href="{{forceURLAbs .Ctx .Provider.GetURLProvider}}" target="_blank" style="font-size:14px; white-space:nowrap;color:#1a1a1a; font-family: 'Source Sans Pro', Georgia, sans-serif; font-weight:700;text-transform:uppercase;">
+                My Page
+            </a>
+        </td>
+        <td width="100" class="m-none">&nbsp;</td>
+    </tr>
+</table>
+{{end}}

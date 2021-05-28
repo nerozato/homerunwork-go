@@ -1,0 +1,62 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content information">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Add FAQ</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Question}}error{{end}}">
+                            <label for="question">Question:</label>
+                            <input type="text" class="form-control" id="question" placeholder="Enter a question" name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenTextFaq}}">
+                            {{if .Errs.Question}}
+                            <div class="error-message">
+                                {{.Errs.Question}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Answer}}error{{end}}">
+                            <label for="text">Answer:</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenTextFaq}}" class="form-control" id="text" rows="5" placeholder="Enter an answer" name="{{.Inputs.Text}}">{{.Text}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Text}}</span>/{{.Constants.lenTextFaq}}
+                                </div>
+                            </div>
+                            {{if .Errs.Answer}}
+                            <div class="error-message">
+                                {{.Errs.Answer}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div id="div-img" class="col-md-12"></div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        {{if .ClientView}}
+                        <a href="{{.Provider.GetURLProvider}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{else}}
+                        <a href="{{.Provider.GetURLFaqs}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{end}}
+                    </div>
+                    <div class="col-6">
+                        <input type="hidden" name="{{.Inputs.Client}}" value="{{.ClientView}}">
+                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{end}}

@@ -1,0 +1,52 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content client-list">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <div class="row">
+                <div class="col-md-12 mb-4 mb-lg-5">
+                    <div>
+                        <h5>
+                            Coupon codes for discount offers as incentives to new clients or rewards to existing clients.
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center client-stats py-3 py-lg-4 m-0">
+                <div class="col-xl-9 mb-3 mb-xl-0">
+                    <h2 class="semibold mb-0">Coupons <span>{{len .Coupons}} coupons</span></h2>
+                </div>
+                <div class="col-xl-3">
+                    <a href="{{.Provider.GetURLCouponAdd}}" class="btn-block btn btn-secondary float-xl-right addClientsBtn"><i class="fas fa-plus-circle" aria-hidden="true"></i> Add Coupon</a>
+                </div>
+            </div>
+            <div class="row m-0">
+                {{range .Coupons}}
+                <div class="col-md-12 client">
+                    <ul class="list-unstyled clearfix mb-0 change-order">
+                        <li class="coupon-code">
+                            <span class="d-block">{{.Code}}</span>
+                        </li>
+                        <li class="coupon-value">
+                            <span class="d-block">{{.FormatValue}}</span>
+                        </li>
+                        <li class="coupon-service">
+                            <span class="d-block">{{.FormatService}}</span>
+                        </li>
+                        <li class="coupon-date">
+                            <span class="d-block">{{.FormatStart $.TimeZone}} - {{.FormatEnd $.TimeZone}}</span>
+                        </li>
+                        <li class="coupon-actions">
+                            <a href="{{$.Provider.GetURLCouponEdit .ID}}" class="btn btn-tertiary edit"><i class="fas fa-pencil-alt" aria-hidden="true"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

@@ -1,0 +1,156 @@
+{{define "body"}}
+<div class="container">
+    <div class="booking-details mt-lg-5 mt-4 mb-lg-5 mb-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="black">
+                    {{if .Svc.IsApptOnly}}
+                    Book for:
+                    {{else}}
+                    Order for delivery:
+                    {{end}}
+                </h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card card-grey p-3">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <ul class="list-unstyled mb-2 mb-lg-0 semibold">
+                                <li>{{.Svc.Name}}</li>
+                                <li>{{.Svc.FormatDuration}}</li>
+                                <li>{{.Svc.FormatPrice}}</li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="{{.Provider.GetURLProvider}}" class="btn btn-tertiary float-lg-right">Change Service</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form id="form-booking" method="POST" action="{{.FormAction}}" class="clearfix">
+        {{if .Errs.TimeZone}}
+        <div class="mb-lg-5 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="form-group error">
+                        <div class="error-message">
+                            {{.Errs.TimeZone}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{end}}
+        {{if .Users}}
+        <div class="booking-date mb-lg-5 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="black">Select a Team Member:</h2>
+                    <div class="input-group row m-0 {{if or .Errs.ID .Errs.UserID}}error{{end}}">
+                        <select id="select-user" class="form-control" name="{{.Inputs.UserID}}">
+                            <option value="" {{if not $.UserId}}selected{{end}}>{{$.Provider.User.FormatName}}</option>
+                            {{range .Users}}
+                            <option value="{{.ID}}" {{if eq .ID.String $.UserId}}selected{{end}}>{{.User.FormatName}}</option>
+                            {{end}}
+                        </select>
+                        {{if .Errs.UserID}}
+                        <div class="error-message">
+                            {{.Errs.UserID}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{end}}
+        <div class="booking-date mb-lg-5 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="black">
+                        {{if .Svc.IsApptOnly}}
+                        Select a date:
+                        {{else}}
+                        Select a delivery date:
+                        {{end}}
+                    </h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="date-picker form-group {{if .Errs.Date}}error{{end}}">
+                        <div id="datepicker" data-date="{{.Date}}"></div>
+                        <input type="hidden" id="date-selected" name="{{.Inputs.Date}}" value="{{.Date}}">
+                        {{if .Errs.Date}}
+                        <div class="error-message">
+                            {{.Errs.Date}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="booking-time mb-lg-5 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="black">
+                        {{if .Svc.IsApptOnly}}
+                        Select a time:
+                        {{else}}
+                        Select a delivery time:
+                        {{end}}
+                    </h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="clearfix timeForm"></div>
+                    <div class="paginationBar"></div>
+                </div>
+                {{if .Errs.Time}}
+                <div class="input-group error">
+                    <div class="error-message">
+                        {{.Errs.Time}}
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+        <div class="booking-actions mb-lg-5 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <input type="hidden" id="timeZone" name="{{.Inputs.TimeZone}}">
+                    <button type="submit" id="submitNext" class="btn btn-primary float-right" {{if not .Time}}disabled{{end}}>Next</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#datepicker').datepicker('setDaysOfWeekDisabled', '{{.DaysOfWeek}}');
+        $('#datepicker').datepicker('setStartDate', new Date('{{.SvcStartDate}}'));
+        $('#datepicker .day').removeClass('today');
+        $('#date-selected').val($('#datepicker').datepicker('getFormattedDate'));
+        $("#datepicker").on("changeDate", function () {
+            $('#datepicker .day').removeClass('today');
+            $('#date-selected').val($('#datepicker').datepicker('getFormattedDate'));
+            $('#form-booking').attr('method', 'GET');
+            $('#form-booking').submit();
+        });
+        function processTimeSelected() {
+            $('#submitNext').prop('disabled', false);
+        }
+        const times = JSON.parse('{{.SvcBusyTimes}}');
+        createSvcTimeSelector('.timeForm', '.paginationBar', '{{.Inputs.Time}}', times, processTimeSelected);
+        $('#timeZone').val(getTimeZone());
+        $('#select-user').change(function () {
+            $('#form-booking').attr("method", "GET");
+            $('#form-booking').submit();
+        });
+    });
+</script>
+{{end}}

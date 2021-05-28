@@ -1,0 +1,320 @@
+{{define "body"}}
+<form id="form-appt-add" method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content appointments appointment-5 add-appt">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Add Order</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="semibold label-infoInput">Select a service:</div>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <div class="input-group row m-0 {{if or .Errs.ID .Errs.ServiceID}}error{{end}}">
+                        <select class="form-control" name="{{.Inputs.SvcID}}" onchange="submitBookingService('#form-appt-add', true, true, '#appointment-5', '#location');">
+                            {{range .Svcs}}
+                            <option value="{{.ID}}" {{if eq .ID.String $.SvcId}}selected{{end}}>{{.Name}} - {{.FormatPrice}} - {{.FormatDuration}}</option>
+                            {{end}}
+                        </select>
+                        {{if .Errs.ID}}
+                        <div class="error-message">
+                            {{.Errs.ID}}
+                        </div>
+                        {{end}}
+                        {{if .Errs.ServiceID}}
+                        <div class="error-message">
+                            {{.Errs.ServiceID}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                {{if and .Provider.IsAdmin .Users}}
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="semibold label-infoInput">Select a user:</div>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <div class="input-group row m-0 {{if or .Errs.ID .Errs.UserID}}error{{end}}">
+                        <select class="form-control" name="{{.Inputs.UserID}}">
+                            <option value="" {{if not $.UserId}}selected{{end}}>{{$.Provider.User.FormatName}}</option>
+                            {{range .Users}}
+                            <option value="{{.ID}}" {{if eq .ID.String $.UserId}}selected{{end}}>{{.User.FormatName}}</option>
+                            {{end}}
+                        </select>
+                        {{if .Errs.UserID}}
+                        <div class="error-message">
+                            {{.Errs.UserID}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                {{end}}
+                {{if .Svc}}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Choose a date:</div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-5">
+                    <div class="form-group mb-0 col-12 {{if .Errs.Date}}error{{end}}">
+                        <div class="date-picker">
+                            <input id="appointment-5" name="{{.Inputs.Date}}" value="{{.Date}}">
+                        </div>
+                        {{if .Errs.Date}}
+                        <div class="error-message">
+                            {{.Errs.Date}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Choose a time:</div>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="input-group col-lg-4 {{if .Errs.Time}}error{{end}}">
+                        <select class="form-control" name="{{.Inputs.Time}}">
+                            {{range .SvcBusyTimes}}
+                            {{if not .Hidden}}
+                            <option value="{{.Start.Unix}}" {{if .Unavailable}}disabled{{end}} {{if eq .FormatStartUnix $.Time}}selected{{end}}>{{.FormatPeriodLocal $.Svc.IsApptOnly $.TimeZone}}</option>
+                            {{end}}
+                            {{end}}
+                        </select>
+                        {{if .Errs.Time}}
+                        <div class="error-message">
+                            {{.Errs.Time}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                {{if .Svc.IsApptOnly}}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold">Repeat:</div>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="input-group col-lg-4 {{if .Errs.Freq}}error{{end}}">
+                        <select class="form-control repeat-option" name="{{.Inputs.Freq}}">
+                            {{range .RecurrenceFreqs}}
+                            <option value="{{.Label}}" {{if eq .Label $.Freq}}selected{{end}}>{{.Label}}</option>
+                            {{end}}
+                        </select>
+                        {{if .Errs.Freq}}
+                        <div class="error-message">
+                            {{.Errs.Freq}}
+                        </div>
+                        {{end}}
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <p class="font-weight-normal h5 mt-2 pt-1 repeat-text"></p>
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+                {{end}}
+                {{$useClientSelect := or .ClientID (gt (len .Clients) 0)}}
+                {{if .Clients}}
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Enter client information:</div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold form-check form-check-inline">
+                            <label>
+                                <input type="radio" class="form-check-input client-type" name="optradio" value="on" {{if $useClientSelect}}checked{{end}}>
+                                <span>Select an existing client:</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group row m-0 {{if .Errs.ClientID}}error{{end}}">
+                        <select class="form-control client-select" name="{{.Inputs.ClientID}}" onchange="submitBookingService('#form-appt-add', true, false, '#appointment-5', '#location');" {{if not $useClientSelect}}disabled{{end}}>
+                            <option value="" {{if not $.ClientId}}selected{{end}} disabled>Please select a client</option>
+                            {{range .Clients}}
+                            <option value="{{.ID}}" {{if eq .ID.String $.ClientId}}selected{{end}}>
+                                {{.Name}} - {{.Email}}
+                                {{if .Phone}}
+                                - {{.Phone}}
+                                {{end}}
+                            </option>
+                            {{end}}
+                        </select>
+                        {{if .Errs.ClientID}}
+                        <div class="error-message">
+                            {{.Errs.ClientID}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold form-check form-check-inline">
+                            <label>
+                                <input type="radio" class="form-check-input client-type" name="optradio" value="off" {{if not $useClientSelect}}checked{{end}}>
+                                <span>Enter a new client:</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Enter the client information:</div>
+                    </div>
+                </div>
+                {{end}}
+                <div class="row mb-5">
+                    <div class="col-lg-4">
+                        <div class="form-group mb-lg-0 {{if .Errs.Name}}error{{end}}">
+                            <input type="text" class="form-control client-new" placeholder="Client Name" name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenName}}" {{if $useClientSelect}}disabled{{end}}>
+                            {{if .Errs.Name}}
+                            <div class="error-message">
+                                {{.Errs.Name}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group mb-lg-0 {{if .Errs.Email}}error{{end}}">
+                            <input type="email" class="form-control client-new" placeholder="Email Address" name="{{.Inputs.Email}}" value="{{.Email}}" maxlength="{{.Constants.lenEmail}}" {{if $useClientSelect}}disabled{{end}}>
+                            {{if .Errs.Email}}
+                            <div class="error-message">
+                                {{.Errs.Email}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group mb-lg-0 {{if .Errs.Phone}}error{{end}}">
+                            <input type="text" class="form-control client-new" placeholder="Phone Number" name="{{.Inputs.Phone}}" value="{{.Phone}}" {{if $useClientSelect}}disabled{{end}}>
+                            {{if .Errs.Phone}}
+                            <div class="error-message">
+                                {{.Errs.Phone}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Enter service location:</div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Location}}error{{end}}">
+                            {{if and .Provider.GetZoomToken .Svc.EnableZoom}}
+                            <input type="text" class="form-control" placeholder="Live meeting via my Zoom meeting URL sent to the client." disabled>
+                            {{else if or .Svc.LocationType.IsLocationClient .Svc.LocationType.IsLocationProvider}}
+                            <input type="text" id="location" class="form-control" placeholder="Enter the service location" name="{{.Inputs.Location}}" value="{{.Location}}" maxlength="{{.Constants.lenLocation}}">
+                            {{else}}
+                            <input type="text" id="location" class="form-control" placeholder="Service delivered remotely" name="{{.Inputs.Location}}" value="{{.Location}}" maxlength="{{.Constants.lenLocation}}">
+                            {{end}}
+                            {{if .Errs.Location}}
+                            <div class="error-message">
+                                {{.Errs.Location}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Message to client:</div>
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-12">
+                        <div class="form-group {{if .Errs.ProviderNote}}error{{end}}">
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenDescProviderNote}}" class="form-control" rows="10" placeholder="Please add your note" name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Desc}}</span>/{{.Constants.lenDescProviderNote}}
+                                </div>
+                            </div>
+                            {{if .Errs.ProviderNote}}
+                            <div class="error-message">
+                                {{.Errs.ProviderNote}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="semibold label-infoInput">Enter a coupon code (optional):</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Code}}error{{end}}">
+                            <input type="text" class="form-control" placeholder="Add a coupon code" name="{{.Inputs.Code}}" value="{{.Code}}" maxlength="{{.Constants.lenCodeCoupon}}">
+                            {{if .Errs.Code}}
+                            <div class="error-message">
+                                {{.Errs.Code}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions mt-5">
+                    <div class="col-6">
+                        <a href="{{.Provider.GetURLBookings}}" class="btn btn-secondary float-left">Cancel</a>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#appointment-5').datepicker();
+        $('#appointment-5').datepicker('setDaysOfWeekDisabled', '{{.DaysOfWeek}}');
+        $('#appointment-5').on("changeDate", function () {
+            submitBookingService('#form-appt-add', true, false, '#appointment-5', '#location');
+        });
+        $('.client-type').change(function (evt) {
+            if ($(this).val() == 'on') {
+                $('.client-new').prop('disabled', true);
+                $('.client-select').prop('disabled', false);
+            } else {
+                $('.client-new').prop('disabled', false);
+                $('.client-select').prop('disabled', true);
+            }
+        });
+    });
+</script>
+{{if .Svc.IsApptOnly}}
+<script type="module">
+    window.addEventListener('load', function () {
+        $('.repeat-option').change(function () {
+            setRepeatText();
+        });
+        setRepeatText();
+        function setRepeatText() {
+            var d = new Date($('#appointment-5').val());
+            var repeatTxt = formatRecurrenceFreq(d, $('.repeat-option').val());
+            $('.repeat-text').text(repeatTxt);
+        }
+    });
+</script>
+{{end}}
+{{end}}

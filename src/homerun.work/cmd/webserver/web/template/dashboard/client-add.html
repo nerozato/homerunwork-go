@@ -1,0 +1,73 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content edit-client">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Add Client</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Name}}error{{end}}">
+                            <label for="name">Client Name:</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter client name" name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenName}}">
+                            {{if .Errs.Name}}
+                            <div class="error-message">
+                                {{.Errs.Name}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Email}}error{{end}}">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter client email" name="{{.Inputs.Email}}" value="{{.Email}}" maxlength="{{.Constants.lenEmail}}">
+                            {{if .Errs.Email}}
+                            <div class="error-message">
+                                {{.Errs.Email}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Phone}}error{{end}}">
+                            <label for="phone">Phone Number:</label>
+                            <input type="text" class="form-control" id="phone" placeholder="Enter client phone no." name="{{.Inputs.Phone}}" value="{{.Phone}}">
+                            {{if .Errs.Phone}}
+                            <div class="error-message">
+                                {{.Errs.Phone}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Location}}error{{end}}">
+                            <label for="location">Location:</label>
+                            <input type="text" class="form-control" id="location" placeholder="Enter client location" name="{{.Inputs.Location}}" value="{{.Location}}" maxlength="{{.Constants.lenLocation}}">
+                            {{if .Errs.Location}}
+                            <div class="error-message">
+                                {{.Errs.Location}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        <a href="{{.Provider.GetURLClients}}" class="btn btn-secondary float-left">Cancel</a>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{end}}

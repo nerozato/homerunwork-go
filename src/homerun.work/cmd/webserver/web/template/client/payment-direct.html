@@ -1,0 +1,111 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row justify-content-center">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-md-9 py-lg-5 py-4 pl-lg-5 content ">
+                <h2 class="semibold mb-4">Make a Payment</h2>
+                {{if .Svc}}
+                <div class="table-responsive">
+                    <table class="table tale-bordered">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0 pl-0">Service</th>
+                                <th width="100" class="border-top-0">
+                                    Time
+                                </th>
+                                <th width="80" class="border-top-0">
+                                    Price
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="pl-0">
+                                    <div class="media py-2">
+                                        <img src="{{.Svc.GetURLImgMain}}" alt="" width="100px" class="img-fluid rounded mr-3">
+                                        <div lang="media-body">
+                                            <p class="font-weight-bold mb-2">{{.Svc.Name}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{.Svc.FormatDuration}}</td>
+                                <td>{{.Svc.FormatPrice}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {{end}}
+                <div class="row align-items-end">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group {{if .Errs.Price}}error{{end}}">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" class="form-control" placeholder="Enter amount" name="{{.Inputs.Price}}" value="{{.Price}}" min="0" step="0.01" />
+                                {{if .Errs.Price}}
+                                <div class="error-message">
+                                    {{.Errs.Price}}
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-end">
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.Name}}error{{end}}">
+                            <input type="text" class="form-control" id="name" placeholder="Your name" name="{{.Inputs.Name}}" value="{{.Name}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.Email}}error{{end}}">
+                            <input type="text" class="form-control" placeholder="Email address" name="{{.Inputs.Email}}" value="{{.Email}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.Phone}}error{{end}}">
+                            <input type="text" class="form-control" placeholder="Phone number (optional)" name="{{.Inputs.Phone}}" value="{{.Phone}}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Desc}}error{{end}}">
+                            <label for="note">Note:</label>
+                            <textarea maxlength="{{.Constants.lenDescPayment}}" id="note" cols="30" rows="4" class="form-control" name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                            <div class="chars">
+                                <span>{{len .Desc}}</span>/{{.Constants.lenDescPayment}}
+                            </div>
+                            {{if .Errs.Desc}}
+                            <div class="error-message">
+                                {{.Errs.Desc}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <a href="{{.Provider.GetURLProvider}}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                    <div class="col-auto">
+                        <input type="hidden" id="timeZone" name="{{.Inputs.TimeZone}}">
+                        {{if .Svc}}
+                        <input type="hidden" name="{{.Inputs.SvcID}}" value="{{.Svc.ID}}">
+                        {{end}}
+                        <button type="submit" class="btn btn-primary float-left">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#timeZone').val(getTimeZone());
+    });
+</script>
+{{end}}

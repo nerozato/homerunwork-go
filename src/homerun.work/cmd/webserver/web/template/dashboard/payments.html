@@ -1,0 +1,97 @@
+{{define "body"}}
+<form id="payments-form" method="GET" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content appointments appointment-2">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="appointments-switcher">
+                    <div class="row appointment-head">
+                        <div class="col-12 mb-3">
+                            <p>To create a new invoice, <a class="copy-link" href="{{.Provider.GetURLBookings}}">select an order</a> or <a class="copy-link" href="{{.Provider.GetURLBookingAdd}}">create</a> a new order.</p>
+                        </div>
+                    </div>
+                    <div class="row appointment-head">
+                        <div class="col-12">
+                            <input type="hidden" id="filter-input" name="{{.Inputs.Filter}}" value="{{.Filter}}">
+                            <ul class="nav nav-tabs" id="myTab">
+                                <li class="nav-item">
+                                    <a class="nav-link p-3 no-border-left {{if ne .Filter .Constants.paymentFilterUnPaid}}active{{end}}" href="javascript:void(0);" onclick="submitFilter('#payments-form', '#filter-input', '{{.Constants.paymentFilterAll}}');">
+                                        All
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link p-3 {{if eq .Filter .Constants.paymentFilterUnPaid}}active{{end}}" href="javascript:void(0);" onclick="submitFilter('#payments-form', '#filter-input', '{{.Constants.paymentFilterUnPaid}}');">
+                                        Unpaid
+                                        {{if .CountUnPaid}}
+                                        ({{.CountUnPaid}})
+                                        {{end}}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="appointment-body mt-3">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                {{range .Payments}}
+                                <div class="appointment-list border-left border-right mb-3">
+                                    <div class="row appointment-header">
+                                    </div>
+                                    <div class="row align-items-center appointment-details">
+                                        <div class="col-md-2">
+                                            <span class="d-block medium">{{.FormatInvoicedDate $.TimeZone}}</span>
+                                        </div>
+                                        <div class="col-md-6 mb-2 mb-md-0">
+                                            <span class="d-block medium">{{.Description}} for ${{.GetAmount}}</span>
+                                            <ul class="tags">
+                                                {{if .IsCaptured}}
+                                                <li><i class="fas fa-money-bill"></i> Paid</li>
+                                                {{end}}
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{if .Client}}
+                                            <span class="d-block medium">
+                                                <a data-toggle="collapse" href="#panel-{{.ID}}" role="button">{{.Client.Name}}</a>
+                                            </span>
+                                            {{else}}
+                                            <span class="d-block medium">{{.Name}}</span>
+                                            {{end}}
+                                        </div>
+                                        <div class="col-md-2 text-center text-md-right">
+                                            <a href="{{.GetURLView}}" class="btn btn-secondary btn-sm p-2 px-md-2 px-xl-3"><i class="fas fa-eye" aria-hidden="true"></i></a>
+                                        </div>
+                                        {{if .Client}}
+                                        <div class="collapse col-12" id="panel-{{.ID}}">
+                                            <div class="card card-body">
+                                                <div class="row align-items-center justify-content-center">
+                                                    <div class="col-sm-6 text-center text-sm-left">
+                                                        <span class="d-block medium">{{.Client.Name}}</h3>
+                                                    </div>
+                                                    <div class="mx-auto mt-3">
+                                                        <h6>Basic details</h6>
+                                                        <ul class="list-unstyled mb-0">
+                                                            <li class="email"><i class="far fa-comment" aria-hidden="true"></i> {{.Client.Email}}</li>
+                                                            {{if .Client.Phone}}
+                                                            <li class="phone"><i class="fas fa-phone-alt" aria-hidden="true"></i> {{.Client.Phone}}</li>
+                                                            {{end}}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>
+{{end}}

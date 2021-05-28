@@ -1,0 +1,281 @@
+{{define "body"}}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9 py-lg-5 py-4">
+            <h2 class="semibold text-center mb-5">Invoice</h2>
+            {{if .Book}}
+            <div class="mb-4">
+                <p>
+                    Invoice #: {{.Payment.FriendlyID}}
+                    {{if .Payment.IsInvoiced}}
+                    <br>
+                    Invoiced: {{.Payment.FormatInvoiced .TimeZone}}
+                    {{end}}
+                    <br>
+                    Amount: ${{.Payment.GetAmount}}
+                    {{if .Payment.IsCaptured}}
+                    <br>
+                    Paid: {{.Payment.FormatCaptured .TimeZone}}
+                    {{else if .Success}}
+                    <br>
+                    Pending
+                    {{else}}
+                    <br>
+                    Due On Receipt
+                    {{end}}
+                </p>
+            </div>
+            <div class="mb-4">
+                <h5 class="font-weight-bold">Bill To</h5>
+                <hr class="mt-2 mb-2" />
+                <p>
+                    {{.Payment.Name}}
+                    <br>
+                    {{.Payment.Email}}
+                    {{if .Payment.Phone}}
+                    <br>
+                    {{.Payment.Phone}}
+                    {{end}}
+                </p>
+            </div>
+            {{if .Payment.Note}}
+            <div class="mb-4">
+                <h5 class="font-weight-bold">Note to Recipient</h5>
+                <hr class="mt-2 mb-2" />
+                <p>{{.Payment.FormatNote}}</p>
+            </div>
+            {{end}}
+            <div class="mb-4">
+                <h5 class="font-weight-bold">Time</h5>
+                <hr class="mt-2 mb-2">
+                <p><span class="text-muted">{{.Book.FormatDateTime .TimeZone}}</p>
+            </div>
+            <div class="mb-3">
+                <h5 class="font-weight-bold">Client</h5>
+                <hr class="mt-2 mb-2">
+                <p>
+                    {{.Book.Client.Name}}
+                    <br>
+                    {{.Book.Client.Email}}
+                    {{if .Book.Client.Phone}}
+                    <br>
+                    {{.Book.Client.Phone}}
+                    {{end}}
+                </p>
+            </div>
+            <div class="table-responsive">
+                <table class="table tale-bordered">
+                    <thead>
+                        <tr>
+                            <th class="border-top-0 pl-0">Service</th>
+                            <th width="100" class="border-top-0">Time</th>
+                            <th width="80" class="border-top-0">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pl-0">
+                                <div class="media py-2">
+                                    <img src="{{.Svc.GetURLImgMain}}" alt="" width="100px" class="img-fluid rounded mr-3">
+                                    <div lang="media-body">
+                                        <p class="font-weight-bold mb-2">{{.Book.ServiceName}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{.Book.ServiceDurationLabel}}</td>
+                            <td>{{.Book.FormatServicePrice}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {{if .Book.Description}}
+            <div class="mb-4">
+                <h5 class="font-weight-bold">Special Request</h5>
+                <hr class="mt-2 mb-2" />
+                <p>{{.Book.FormatDescription}}</p>
+            </div>
+            {{end}}
+            {{if .Book.ProviderNote}}
+            <div class="mb-4">
+                <h5 class="font-weight-bold">Note from the Provider</h5>
+                <hr class="mt-2 mb-2">
+                <p>{{.Book.FormatProviderNote}}</p>
+            </div>
+            {{end}}
+            {{else}}
+            {{if .Svc}}
+            <div class="table-responsive">
+                <table class="table tale-bordered">
+                    <thead>
+                        <tr>
+                            <th class="border-top-0 pl-0">Service</th>
+                            <th width="100" class="border-top-0">Time</th>
+                            <th width="80" class="border-top-0">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pl-0">
+                                <div class="media py-2">
+                                    <img src="{{.Svc.GetURLImgMain}}" alt="" width="100px" class="img-fluid rounded mr-3">
+                                    <div lang="media-body">
+                                        <p class="font-weight-bold mb-2">{{.Svc.Name}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{.Svc.FormatDuration}}</td>
+                            <td>{{.Svc.FormatPrice}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {{end}}
+            <div class="mb-4">
+                <p>
+                    Amount: ${{.Payment.GetAmount}}
+                    {{if .Payment.IsCaptured}}
+                    <br>
+                    Paid: {{.Payment.FormatCaptured .TimeZone}}
+                    {{else if .Success}}
+                    <br>
+                    Pending
+                    {{end}}
+                    <br>
+                    Name: {{.Payment.Name}}
+                    <br>
+                    Email: {{.Payment.Email}}
+                    {{if .Payment.Phone}}
+                    <br>
+                    Phone: {{.Payment.Phone}}
+                    {{end}}
+                </p>
+            </div>
+            {{if .Payment.Note}}
+            <div class="mb-4">
+                <h5 class="font-weight-bold">Note</h5>
+                <hr class="mt-2 mb-2" />
+                <p>{{.Payment.FormatNote}}</p>
+            </div>
+            {{end}}
+            {{end}}
+            <div class="row mt-3 justify-content-center">
+                {{if .Payment.IsCaptured}}
+                <div class="col-md-9 py-lg-5 py-4">
+                    <h2 class="semibold text-center mb-5">PAID</h2>
+                </div>
+                {{else if or .Payment.IsPaid .Success}}
+                <div class="col-md-9 py-lg-5 py-4">
+                    <h2 class="semibold text-center mb-5">PENDING</h2>
+                </div>
+                {{else}}
+                {{if .PayPalOrderId}}
+                <div class="col-md-6 align-items-center">
+                    <div id="paypal-button-container"></div>
+                </div>
+                <script src="https://www.paypal.com/sdk/js?client-id={{.PayPalClientId}}"></script>
+                <script type="module">
+                    window.addEventListener('load', function () {
+                        paypal.Buttons({
+                            createOrder: function (data, actions) {
+                                return '{{.PayPalOrderId}}';
+                            },
+                            onApprove: function (data, actions) {
+                                return actions.order.capture().then(function (details) {
+                                    if (details.status == 'PENDING' || details.status == 'COMPLETED') {
+                                        window.location = '{{.Payment.URL}}?{{.Inputs.PayPalID}}=' + details.id + '&{{.Inputs.State}}=' + details.status;
+                                        return;
+                                    }
+                                    $('#status-modalLabel').text('Error');
+                                    $('#status-modalMsg').text('Your payment was not successful: ' + details.status + ': ' + details.status_details.reason);
+                                    $('#status-modal').modal('show');
+                                })
+                            },
+                            onError: function (err) {
+                                $('#status-modalLabel').text('Error');
+                                $('#status-modalMsg').text('Your payment was not successful: ' + err);
+                                $('#status-modal').modal('show');
+                            }
+                        }).render('#paypal-button-container');
+                    });
+                </script>
+                {{end}}
+                {{if .StripeSessionId}}
+                <div class="col-md-6 align-items-center">
+                    <button id="stripe-btn" class="btn btn-block btn-stripe" type="button">Pay with a Credit Card with Stripe</button>
+                    <br>
+                    <button id="stripe-ach-button" class="btn btn-block btn-stripe" type="button">Pay with a Bank Account with Stripe</button>
+                    <form id="form-ach" method="POST" action="{{.FormAction}}">
+                        <input id="input-ach" type="hidden" name="{{.Inputs.Data}}">
+                    </form>
+                </div>
+                <script src="https://js.stripe.com/v3/"></script>
+                <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+                <script type="module">
+                    window.addEventListener('load', function () {
+                        $('#stripe-btn').click(function (event) {
+                            var stripe = Stripe('{{.StripePublicKey}}', {
+                                stripeAccount: '{{.StripeAccountId}}'
+                            });
+                            stripe.redirectToCheckout({
+                                sessionId: '{{.StripeSessionId}}'
+                            }).then(function (result) {
+                                $('#status-modalLabel').text('Error');
+                                $('#status-modalMsg').text('Your payment was not successful: ' + result.error.message);
+                                $('#status-modal').modal('show');
+                            });
+                        });
+                        const cfg = {
+                            token: '{{.PlaidToken}}',
+                            onSuccess: async function (token, metadata) {
+                                $('#input-ach').val(JSON.stringify(metadata))
+                                $('#form-ach').submit();
+                            },
+                            onExit: async function (err, metadata) {
+                            },
+                        };
+                        var plaidHdlr = Plaid.create(cfg);
+                        document.getElementById('stripe-ach-button').onclick = function () {
+                            plaidHdlr.open();
+                        };
+                    });
+                </script>
+                {{end}}
+                {{if .ZelleId}}
+                <div class="col-md-6 align-items-center mt-5">
+                    <h5 class="font-weight-bold">Pay with Zelle</h5>
+                    <h5>
+                        Send
+                        <span class="font-weight-bold">${{.Payment.GetAmount}}</span>
+                        to
+                        <span class="font-weight-bold">{{.ZelleId}}</span>
+                        from your bank account. Please check with your bank about how to send money via Zelle.
+                    </h5>
+                </div>
+                {{end}}
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="status-modalLabel"></h5>
+                        </div>
+                        <div class="modal-body">
+                            <p class="mb-0 px-3 py-3" id="status-modalMsg"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

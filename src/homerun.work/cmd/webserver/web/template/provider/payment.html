@@ -1,0 +1,107 @@
+{{define "body"}}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9 py-lg-5 py-4">
+            <h2 class="semibold text-center mb-5">Invoice</h2>
+            <div>
+                <p>
+                    Invoice #: {{.Payment.FriendlyID}}
+                    {{if .Payment.IsInvoiced}}
+                    <br>
+                    Invoiced: {{.Payment.FormatInvoiced .TimeZone}}
+                    {{end}}
+                    <br>
+                    Amount: ${{.Payment.GetAmount}}
+                    {{if .Payment.IsCaptured}}
+                    <br>
+                    Paid: {{.Payment.FormatCaptured .TimeZone}}
+                    {{else if .Success}}
+                    <br>
+                    Pending
+                    {{else}}
+                    <br>
+                    Due On Receipt
+                    {{end}}
+                </p>
+            </div>
+            <div class="mb-4">
+                <hr class="mt-2 mb-2" />
+                <p>{{.Payment.Description}}</p>
+            </div>
+            <div class="mb-4">
+                <h5 class="font-weight-bold">Bill To</h5>
+                <hr class="mt-2 mb-2" />
+                <p>
+                    {{.Payment.Name}}
+                    <br>
+                    {{.Payment.Email}}
+                </p>
+            </div>
+            {{if .Payment.Note}}
+            <div class="mb-4">
+                <h5 class="font-weight-bold">Note To Recipient</h5>
+                <hr class="mt-2 mb-2" />
+                <p>{{.Payment.FormatNote}}</p>
+            </div>
+            {{end}}
+            <div class="row mt-5 justify-content-center">
+                {{if .Payment.IsCaptured}}
+                <div class="col-md-9 py-lg-5 py-4">
+                    <h2 class="semibold text-center mb-5">Paid on {{.Payment.FormatCaptured .TimeZone}}</h2>
+                </div>
+                {{else if or .Payment.IsPaid .Success}}
+                <div class="col-md-9 py-lg-5 py-4">
+                    <h2 class="semibold text-center mb-5">Pending, paid on {{.Payment.FormatPaid .TimeZone}}</h2>
+                </div>
+                {{else}}
+                {{if .PayPalOrderId}}
+                <div class="col-md-6 align-items-center">
+                    <div id="paypal-button-container"></div>
+                </div>
+                <script src="https://www.paypal.com/sdk/js?client-id={{.PayPalClientId}}"></script>
+                <script type="module">
+                    window.addEventListener('load', function () {
+                        paypal.Buttons({
+                            createOrder: function (data, actions) {
+                                return '{{.PayPalOrderId}}';
+                            },
+                            onApprove: function (data, actions) {
+                                return actions.order.capture().then(function (details) {
+                                    if (details.status == 'PENDING' || details.status == 'COMPLETED') {
+                                        window.location = '{{.Campaign.GetURLPayment .Payment.ID}}&{{.Inputs.PayPalID}}=' + details.id + '&{{.Inputs.State}}=' + details.status;
+                                        return;
+                                    }
+                                    alert('An error has occurred: ' + details.status + ': ' + details.status_details.reason);
+                                })
+                            },
+                            onError: function (err) {
+                                alert(err);
+                            }
+                        }).render('#paypal-button-container');
+                    });
+                </script>
+                {{end}}
+                {{if .StripeSessionId}}
+                <div class="col-md-6 align-items-center">
+                    <button id="stripe-btn" class="btn btn-block btn-stripe" type="button">Pay with Stripe</button>
+                </div>
+                <script src="https://js.stripe.com/v3/"></script>
+                <script type="module">
+                    window.addEventListener('load', function () {
+                        $('#stripe-btn').click(function (event) {
+                            var stripe = Stripe('{{.StripePublicKey}}');
+                            stripe.redirectToCheckout({
+                                sessionId: '{{.StripeSessionId}}'
+                            }).then(function (result) {
+                                alert(result.error.message);
+                            });
+                        });
+                    });
+                </script>
+                {{end}}
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

@@ -1,0 +1,220 @@
+{{define "body"}}
+<form id="campaign-form" method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 pl-lg-5 content edit-client">
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Manage Campaign</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Provider:</h5>
+                        <p>
+                            {{.Provider.Name}}
+                            <br>
+                            <a href="mailto:{{.Provider.User.Email}}" style="color:#fb6d3b;">{{.Provider.User.Email}}</a>
+                            <br>
+                            <a href="{{forceURLAbs .Ctx .Provider.GetURLProviderPermanent}}" style="color:#fb6d3b;">{{forceURLAbs .Ctx .Provider.GetURLProviderPermanent}}</a>
+                            <br>
+                            {{.Provider.ServiceArea}}
+                            {{if .Provider.Location}}
+                            <br>
+                            {{.Provider.Location}}
+                            {{end}}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Service:</h5>
+                        <p>{{.Campaign.FormatService}}</p>
+                    </div>
+                </div>
+                {{if .Campaign.Text}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Promotional Text:</h5>
+                        <p>{{.Campaign.Text}}</p>
+                    </div>
+                </div>
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <h5 class="font-weight-bold">Image for the Campaign:</h5>
+                        <img src="{{.Campaign.GetURLImg}}" alt="" class="img-fluid rounded">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Target Client:</h5>
+                        <p>
+                            {{.Campaign.Gender}}, {{.Campaign.AgeMin}} - {{.Campaign.AgeMax}}
+                            {{if .Campaign.Locations}}
+                            <br>
+                            {{.Campaign.Locations}}
+                            {{end}}
+                            {{if .Campaign.Interests}}
+                            <br>
+                            {{.Campaign.Interests}}
+                            {{end}}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Schedule and Budget:</h5>
+                        <p>{{.Campaign.FormatStart .TimeZone}} - {{.Campaign.FormatEnd .TimeZone}}, {{.Campaign.FormatDuration}}, Total {{.Campaign.FormatBudgetTotal}} ({{.Campaign.FormatBudget}})</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Ad Platform:</h5>
+                        <p>
+                            {{.Campaign.Platform}}
+                            <br>
+                            Use Existing Facebook Page:
+                            <span class="font-weight-bold">
+                                {{if .Campaign.HasFacebookPage}}
+                                <a href="{{.Campaign.URLFacebook}}" target="_blank">{{.Campaign.URLFacebook}}</a>
+                                {{else}}
+                                Need help to create
+                                {{end}}
+                            </span>
+                            <br>
+                            Use Existing Facebook Ad Account:
+                            <span class="font-weight-bold">
+                                {{if .Campaign.HasFacebookAdAccount}}
+                                Yes
+                                {{else}}
+                                Need help to create
+                                {{end}}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Status:</h5>
+                        <h2 class="semibold mt-3">{{.Campaign.Status}}</h2>
+                    </div>
+                </div>
+                <div class="row mt-4 mt-lg-5">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Change Status:</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <select class="form-control" name="{{.Inputs.Status}}">
+                            {{range .Constants.campaignStatuses}}
+                            <option value="{{.}}" {{if eq $.Status .}}selected{{end}}>{{.}}</option>
+                            {{end}}
+                        </select>
+                        {{if .Errs.Status}}
+                        <div class="error-message">
+                            {{.Errs.Status}}
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row form-actions mt-3">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-secondary float-right" name="{{.Inputs.Step}}" value="{{.Steps.StepStatus}}">Update</button>
+                    </div>
+                </div>
+                <div class="row mt-4 mt-lg-5">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Payment:</h5>
+                    </div>
+                </div>
+                {{if .Payment}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="font-weight-bold">
+                            Invoiced: {{.Payment.FormatInvoiced .TimeZone}}
+                            {{if .Payment.IsCaptured}}
+                            <br>
+                            Paid: {{.Payment.FormatCaptured .TimeZone}}
+                            {{else if .Payment.IsPaid}}
+                            <br>
+                            Received: {{.Payment.FormatPaid .TimeZone}}
+                            {{end}}
+                        </p>
+                    </div>
+                </div>
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>
+                            Service Fees:
+                            Campaign Creation: {{.Constants.campaignFee}}
+                            {{if not .Campaign.HasFacebookPage}}
+                            <br>
+                            Facebook Ad Account Creation: {{.Constants.campaignFeeFacebookAdAccount}}
+                            {{end}}
+                            {{if not .Campaign.HasFacebookAdAccount}}
+                            <br>
+                            Facebook Ad Account Creation: {{.Constants.campaignFeeFacebookPage}}
+                            {{end}}
+                            <br>
+                            Total: {{.Campaign.FormatFee}}
+                        </p>
+                    </div>
+                </div>
+                {{if not .Payment.IsPaid}}
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="price">Amount:</label>
+                            <div class="input-group {{if .Errs.Price}}error{{end}}">
+                                <div class="input-group-prepend">
+                                    <span>$</span>
+                                </div>
+                                <input id="price" type="number" class="form-control" name="{{.Inputs.Price}}" value="{{.Price}}" min="0" step="0.01" />
+                                {{if .Errs.Price}}
+                                <div class="error-message">
+                                    {{.Errs.Price}}
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Desc}}error{{end}}">
+                            <label for="note">Note to Provider:</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenDescPayment}}" id="note" cols="30" rows="3" class="form-control" name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Desc}}</span>/{{.Constants.lenDescPayment}}
+                                </div>
+                            </div>
+                            {{if .Errs.Desc}}
+                            <div class="error-message">
+                                {{.Errs.Desc}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-secondary float-right" name="{{.Inputs.Step}}" value="{{.Steps.StepInvoice}}">
+                            {{if .Payment}}
+                            Resend Invoice
+                            {{else}}
+                            Send Invoice
+                            {{end}}
+                        </button>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="{{.Inputs.ID}}" value="{{.Campaign.ExternalID}}">
+</form>
+{{end}}

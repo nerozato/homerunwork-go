@@ -1,0 +1,20 @@
+{{define "body"}}
+<div class="multiform-confirmation mt-4 mt-lg-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 inner py-3 px-3 py-lg-6 px-lg-6">
+                <h4>Signup Is Complete</h4>
+                <p>
+                    Your web site is ready for use.
+                </p>
+                <br>
+                <br>
+                <div>
+                    <a class="btn-block btn btn-primary" href="{{.Provider.GetURLProvider}}">View Your Page</a>
+                    <a class="btn-block btn btn-secondary" href="{{.Provider.GetURLDashboard}}">Customize It</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

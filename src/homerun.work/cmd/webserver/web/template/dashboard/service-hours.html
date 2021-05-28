@@ -1,0 +1,129 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content service-hours">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <form id="schedule-form" method="POST" action="{{.FormAction}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-3 mb-lg-4">Schedule</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <div>
+                            <h5>
+                                Your service hours for each day of the week. You can add multiple periods for each day, and mark a whole day as unavailable. Your clients will only be able to order your services on the day and time when you are available.
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-5">
+                        <span class="font-weight-bold">Timezone:</span>
+                        <span class="pr-3">{{.Provider.User.TimeZone}}</span>
+                        <a href="{{.Provider.GetURLAccountAnchor .Inputs.TimeZone}}"><i class="fas fa-pencil-alt icon-orange" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="row mb-5 mb-lg-2 column-heading">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="day-label">Day</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group ">
+                            <label>Working Hours - From</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group ">
+                            <label>Duration</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group ">
+                            <label>To</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group ">
+                            <label></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-container">
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        {{if .ClientView}}
+                        <a href="{{.Provider.GetURLProvider}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{else}}
+                        <a href="{{.Provider.GetURLHours}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{end}}
+                    </div>
+                    <div class="col-6">
+                        <input type="hidden" name="{{.Inputs.Client}}" value="{{.ClientView}}">
+                        <input id="schedule-input" type="hidden" name="{{.Inputs.Schedule}}" value="">
+                        <button id="schedule-btn" type="button" class="btn btn-primary float-right">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="msg-modal-schedule" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="msg-modalLabel">Error</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p id="modalConfirmMsg" class="mb-0 px-3 py-3">
+                                Please create a valid schedule.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="module">
+    window.addEventListener('load', function () {
+        const schedules = JSON.parse('{{.Schedule}}');
+        var errDaysData = '{{.DaysOfWeek}}';
+        var errDays = null;
+        if (errDaysData !== '') {
+            errDays = JSON.parse(errDaysData);
+        }
+        var getSchedule = createSchedule('.schedule-container', schedules, errDays);
+        $('#schedule-btn').click(function (evt) {
+            var data = getSchedule();
+            if (data != null) {
+                var json = JSON.stringify(data);
+                $('#schedule-input').val(json);
+                $('#schedule-form').submit();
+                return;
+            }
+            $('#msg-modal-schedule').modal('show');
+        });
+    });
+</script>
+{{if .DaysOfWeek}}
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#msg-modal-schedule').modal('show');
+    });
+</script>
+{{end}}
+{{end}}

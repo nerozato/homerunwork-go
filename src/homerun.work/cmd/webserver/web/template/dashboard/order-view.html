@@ -1,0 +1,285 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-md-9 py-lg-5 py-4 pl-lg-5 content appointments appointment-5 add-appt">
+                <h2 class="semibold mb-4">
+                    View Order
+                    {{if .Book.IsCancelled}}
+                    (Cancelled)
+                    {{end}}
+                </h2>
+                {{if and .Provider.IsAdmin .Book.ProviderUser}}
+                {{if .Book.ProviderUser.User}}
+                <div>
+                    <h5 class="font-weight-bold">Team Member</h5>
+                    <hr class="mt-2 mb-2">
+                    <p class="mb-5">
+                        {{.Book.ProviderUser.User.FirstName}} {{.Book.ProviderUser.User.LastName}}
+                        <br>
+                        {{.Book.ProviderUser.User.Email}}
+                    </p>
+                </div>
+                {{end}}
+                {{end}}
+                {{if not .Book.IsRecurring}}
+                <div>
+                    <h5 class="font-weight-bold">Order Time</h5>
+                    <hr class="mt-2 mb-2">
+                    <p>
+                        {{.Book.FormatCreated .TimeZone}}
+                    </p>
+                </div>
+                {{end}}
+                <div>
+                    <h5 class="font-weight-bold">Delivery Time</h5>
+                    <hr class="mt-2 mb-2">
+                    <p>
+                        {{.Book.FormatDateTime .TimeZone}}
+                        {{if .Book.IsRecurring}}
+                        &nbsp;&nbsp;&nbsp;
+                        <span class="repeat-text"></span>
+                        {{end}}
+                    </p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table tale-bordered">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0 pl-0">Service</th>
+                                <th width="100" class="border-top-0">Time</th>
+                                <th width="80" class="border-top-0">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="pl-0">
+                                    <div class="media py-2">
+                                        <img src="{{.Svc.GetURLImgMain}}" alt="" width="100px" class="img-fluid rounded mr-3">
+                                        <div lang="media-body">
+                                            <p class="font-weight-bold mb-2">{{.Book.ServiceName}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{.Book.ServiceDurationLabel}}</td>
+                                <td>{{.Book.FormatServicePrice}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {{if .Book.CouponCode}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Coupon</h5>
+                    <hr class="mt-2 mb-2">
+                    {{if .Book.CouponApplied}}
+                    <p>{{.Book.FormatCoupon}}</p>
+                    {{else}}
+                    <p>{{.Book.CouponCode}} - <span class="text-danger">Not Valid</span></p>
+                    {{end}}
+                </div>
+                {{end}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Client</h5>
+                    <hr class="mt-2 mb-2">
+                    <p>
+                        {{.Book.Client.Name}}
+                        <br>
+                        {{.Book.Client.Email}}
+                        {{if .Client.Phone}}
+                        <br>
+                        {{.Book.Client.Phone}}
+                        {{end}}
+                    </p>
+                </div>
+                {{if .Book.Location}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Service Location</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p>{{.Book.Location}}</p>
+                </div>
+                {{end}}
+                {{if .Book.Description}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Special Request</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p>{{.Book.FormatDescription}}</p>
+                </div>
+                {{end}}
+                {{if .Book.ProviderNote}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Message to Client</h5>
+                    <hr class="mt-2 mb-2">
+                    <p>{{.Book.FormatProviderNote}}</p>
+                </div>
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label>
+                            Order URL
+                            <a href="javascript:void(0);" data-toggle="popover" data-content="Share the order URL with clients to let them view the order." class="icon-orange toggle-callout" data-placement="top">?</a>
+                        </label>
+                        <input type="text" id="booking-link" value="{{forceURLAbs .Ctx .Book.GetURLViewClient}}" style="display:none;">
+                        <a href="javascript:void(0);" onclick="clipLink('booking-link', '#copied-span');">{{forceURLAbs .Ctx .Book.GetURLViewClient}}<i class="far fa-clone icon-orange ml-3" aria-hidden="true"></i></a><span id="copied-span" class="ml-2"></span>
+                    </div>
+                </div>
+                {{if and .Book.MeetingZoomData (.Book.IsEditable .CurrentTime)}}
+                <div class="row">
+                    <div class="col-md-12 mt-3 mb-3">
+                        <a type="button" class="btn btn-secondary" href="{{.Book.MeetingZoomData.URLStart}}" target="_blank">Start Zoom Meeting</a>
+                    </div>
+                </div>
+                {{end}}
+                {{if or .Book.IsInvoiced .Book.IsCaptured}}
+                <div class="row">
+                    <div class="col-md-12 mt-3">
+                        {{if .Book.IsInvoiced}}
+                        <p class="icon-orange">
+                            Invoiced on {{.Book.FormatInvoiced .TimeZone}}
+                        </p>
+                        {{end}}
+                        {{if .Book.IsCaptured}}
+                        <p class="icon-orange">
+                            Paid on {{.Book.FormatCaptured .TimeZone}}
+                        </p>
+                        {{end}}
+                    </div>
+                </div>
+                {{end}}
+                {{if .Book.Payment}}
+                <div class="row">
+                    <div class="col-md-12 mt-3 mb-3">
+                        <h5 class="font-weight-bold">Invoice QR Code</h5>
+                        <div id="qr-code"></div>
+                    </div>
+                </div>
+                {{end}}
+                <div class="row">
+                    <input type="hidden" name="{{.Inputs.BookID}}" value="{{.Book.ID}}">
+                    {{if .Provider.IsAdmin}}
+                    {{if and .Book.Confirmed .Book.SupportsPayment}}
+                    {{if .Book.IsCaptured}}
+                    <div class="col-md-3 mt-3">
+                        <a href="{{.Book.GetURLPaymentView}}" class="btn btn-block btn-secondary">View Payment</a>
+                    </div>
+                    {{if .Book.AllowUnPay}}
+                    <div class="col-md-3 mt-3">
+                        <button type="button" class="btn btn-block btn-secondary" onclick="$('#msg-modal-confirm').modal('show');">Mark as Unpaid</button>
+                    </div>
+                    {{end}}
+                    {{else}}
+                    {{if .Book.Payment}}
+                    <div class="col-md-3 mt-3">
+                        <a href="{{.Book.GetURLPaymentView}}" class="btn btn-block btn-secondary">View Invoice</a>
+                    </div>
+                    <div class="col-md-3 mt-3">
+                        <a href="{{.Book.GetURLPayment}}" class="btn btn-block btn-secondary">Resend Invoice</a>
+                    </div>
+                    {{else}}
+                    <div class="col-md-3 mt-3">
+                        <a href="{{.Book.GetURLPayment}}" class="btn btn-block btn-secondary">Send Invoice</a>
+                    </div>
+                    {{end}}
+                    <div class="col-md-3 mt-3">
+                        <button type="button" class="btn btn-block btn-secondary" onclick="$('#msg-modal-confirm').modal('show');">Mark as Paid</button>
+                    </div>
+                    {{end}}
+                    {{end}}
+                    {{end}}
+                </div>
+                <div class="row">
+                    {{if .Book.Confirmed}}
+                    {{if .Book.IsEditable .CurrentTime}}
+                    <div class="col-md-3 mt-3">
+                        <a href="{{.Book.GetURLEdit}}" class="btn btn-block btn-secondary">Edit Order</a>
+                    </div>
+                    {{end}}
+                    {{else}}
+                    {{if not .Book.IsCancelled}}
+                    <div class="col-md-3 mt-3">
+                        <a href="{{.Book.GetURLEdit}}" class="btn btn-block btn-secondary">Confirm</a>
+                    </div>
+                    {{end}}
+                    {{end}}
+                    {{if and (.Book.IsEditable .CurrentTime) (not .Book.IsCancelled)}}
+                    <div class="col-md-3 mt-3">
+                        <button type="button" class="btn btn-secondary btn-block float-left mb-1" onclick="$('#msg-modal-confirm-cancel').modal('show');"><i class="fas fa-trash mr-2" aria-hidden="true"></i> Cancel Order</button>
+                    </div>
+                    {{end}}
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mt-3">
+                        <a href="{{.Provider.GetURLBookings}}" class="btn btn-block btn-primary">Done</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{block "confirmModal" .}}
+    {{end}}
+    <div class="modal fade" id="msg-modal-confirm-cancel" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabel">Confirmation</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modalConfirmMsg" class="mb-0 px-3 py-3">
+                                    {{if .Book.IsRecurring}}
+                                    How many occurrences do you want to cancel?
+                                    {{else}}
+                                    Are you sure you want to cancel the order?
+                                    {{end}}
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Do Not Cancel</button>
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepDel}}">
+                                    {{if .Book.IsRecurring}}
+                                    Only Once
+                                    {{else}}
+                                    Cancel
+                                    {{end}}
+                                </button>
+                                {{if .Book.IsRecurring}}
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepDelAll}}">All Upcoming</button>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('.repeat-text').text(formatRecurrenceFreq('{{.Book.FormatTimeFromDate .TimeZone}}', '{{.Book.RecurrenceFreqLabel}}'));
+    });
+</script>
+{{end}}
+{{define "script"}}
+{{if .Book.Payment}}
+<script src="{{.UrlAssets}}/dashboard/js/kjua-0.9.0.min.js"></script>
+<script type="module">
+    window.addEventListener('load', function () {
+        var img = new Image();
+        img.src = '{{forceURLAbs .Ctx .Provider.GetURLImgLogo}}';
+        img.crossOrigin = 'Anonymous';
+        $('#qr-code').kjua({
+            ecLevel: 'Q',
+            size: 125,
+            text: '{{forceURLAbs .Ctx .Book.Payment.URL}}',
+            render: 'svg',
+            mode: 'image',
+            mSize: 25,
+            image: img
+        });
+    });
+</script>
+{{end}}
+{{end}}

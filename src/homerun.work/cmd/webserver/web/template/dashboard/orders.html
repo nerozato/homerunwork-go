@@ -1,0 +1,162 @@
+{{define "body"}}
+<form id="orders-form" method="GET" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content appointments appointment-2">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="appointments-switcher">
+                    <div class="row appointment-head">
+                        <div class="col-12">
+                            <input type="hidden" id="filter-input" name="{{.Inputs.Filter}}" value="{{.Filter}}">
+                            <a href="{{.Provider.GetURLBookingAdd}}" class="btn btn-secondary mb-3 mb-md-0"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Order</a>
+                            <ul class="nav nav-tabs" id="myTab">
+                                <li class="nav-item">
+                                    <a class="nav-link p-3 no-border-left {{if and (ne .Filter .Constants.bookingFilterUpcoming) (ne .Filter .Constants.bookingFilterUnPaid)}}active{{end}}" href="javascript:void(0);" onclick="submitFilter('#orders-form', '#filter-input', '');">Calendar</a>
+                                </li>
+                                {{if .Provider.IsAdmin}}
+                                <li class="nav-item">
+                                    <a class="nav-link p-3 no-border-left {{if eq .Filter .Constants.bookingFilterUnPaid}}active{{end}}" href="javascript:void(0);" onclick="submitFilter('#orders-form', '#filter-input', '{{.Constants.bookingFilterUnPaid}}');">
+                                        Unpaid
+                                        {{if .CountUnPaid}}
+                                        ({{.CountUnPaid}})
+                                        {{end}}
+                                    </a>
+                                </li>
+                                {{end}}
+                                <li class="nav-item">
+                                    <a class="nav-link p-3 {{if eq .Filter .Constants.bookingFilterUpcoming}}active{{end}}" href="javascript:void(0);" onclick="submitFilter('#orders-form', '#filter-input', '{{.Constants.bookingFilterUpcoming}}');">
+                                        Upcoming
+                                        {{if .CountUpcoming}}
+                                        ({{.CountUpcoming}})
+                                        {{end}}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="appointment-body mt-3">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                {{if or (eq .Filter .Constants.bookingFilterUpcoming) (eq .Filter .Constants.bookingFilterUnPaid)}}
+                                {{if eq .Filter .Constants.bookingFilterUpcoming}}
+                                <input type="hidden" id="filter-sub-input" name="{{.Inputs.FilterSub}}" value="{{.FilterSub}}">
+                                <ul class="order-status">
+                                    <li>
+                                        <a class="icon-orange {{if eq .FilterSub .Constants.bookingFilterNew}}active{{end}}" href="javascript:void(0);" onclick="submitFilter('#orders-form', '#filter-sub-input', '{{.Constants.bookingFilterNew}}');">New ({{.CountNew}})</a>
+                                    </li>
+                                    <li>
+                                        <a class="icon-orange {{if eq .FilterSub .Constants.bookingFilterAll}}active{{end}}" href="javascript:void(0);" onclick="submitFilter('#orders-form', '#filter-sub-input', '{{.Constants.bookingFilterAll}}');">All</a>
+                                    </li>
+                                </ul>
+                                {{end}}
+                                {{range $i, $bbw := .Books.Items}}
+                                <div class="appointment-list border-left border-right mb-3">
+                                    {{range $j, $b := $bbw.Bookings}}
+                                    {{if eq $j 0}}
+                                    <div class="row appointment-header">
+                                        <div class="col-12">
+                                            <span class="d-block">{{$bbw.FormatWeekDay}}, {{$bbw.FormatDateLong $.TimeZone}}</span>
+                                        </div>
+                                    </div>
+                                    {{end}}
+                                    <div class="row align-items-center appointment-details">
+                                        <div class="col-md-3">
+                                            <span class="d-block semibold">{{$b.FormatTime $.TimeZone}}</span>
+                                        </div>
+                                        <div class="col-md-6 mb-2 mb-md-0">
+                                            <span class="d-block medium">
+                                                {{$b.ServiceName}}, {{$b.ServiceDurationLabel}}, {{$b.FormatServicePrice}},
+                                                <a data-toggle="collapse" href="#panel-{{$b.ID}}" role="button">{{$b.Client.Name}}</a>
+                                            </span>
+                                            <ul class="tags">
+                                                {{if $b.IsApptOnly}}
+                                                <li><i class="far fa-clock"></i> By Appt.</li>
+                                                {{end}}
+                                                {{if $b.IsRecurring}}
+                                                <li><i class="fas fa-redo"></i> Recurring</li>
+                                                {{end}}
+                                                {{if $b.Confirmed}}
+                                                <li><i class="fas fa-check"></i> Confirmed</li>
+                                                {{end}}
+                                                {{if $b.IsCaptured}}
+                                                <li><i class="fas fa-money-bill"></i> Paid</li>
+                                                {{else if $b.IsInvoiced}}
+                                                <li><i class="fas fa-file-invoice-dollar"></i> Invoiced</li>
+                                                {{end}}
+                                                {{if $b.MeetingZoomData}}
+                                                <li class="video"><i class="fas fa-video"></i></li>
+                                                {{end}}
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-3 text-center text-md-right">
+                                            <a href="{{$b.GetURLView}}" class="btn btn-secondary btn-sm p-2 px-md-2 px-xl-3"><i class="fas fa-eye" aria-hidden="true"></i></a>
+                                            {{if $b.IsEditable $.CurrentTime}}
+                                            <a href="{{$b.GetURLEdit}}" class="btn btn-secondary btn-sm p-2 px-md-2 px-xl-3"><i class="fas fa-pencil-alt" aria-hidden="true"></i></a>
+                                            {{end}}
+                                        </div>
+                                        <div class="collapse col-12" id="panel-{{$b.ID}}">
+                                            <div class="card card-body">
+                                                <div class="row align-items-center justify-content-center">
+                                                    <div class="col-sm-6 text-center text-sm-left">
+                                                        <h3>{{$b.Client.Name}}</h3>
+                                                    </div>
+                                                    <div class="mx-auto mt-3">
+                                                        <h6>Basic details</h6>
+                                                        <ul class="list-unstyled mb-0">
+                                                            <li class="email"><i class="far fa-comment" aria-hidden="true"></i> {{$b.Client.Email}}</li>
+                                                            {{if $b.Client.Phone}}
+                                                            <li class="phone"><i class="fas fa-phone-alt" aria-hidden="true"></i> {{$b.Client.Phone}}</li>
+                                                            {{end}}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{end}}
+                                </div>
+                                {{end}}
+                                {{else}}
+                                <div class="mt-5">
+                                    <div id="calendar"></div>
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>
+{{if or (eq .Filter .Constants.bookingFilterUpcoming) (eq .Filter .Constants.bookingFilterUnPaid)}}
+{{else}}
+<script type="module">
+    window.addEventListener('load', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            themeSystem: 'bootstrap',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            },
+            navLinks: true,
+            events: {
+                url: '{{.Url}}',
+                timeZoneParam: 'UTC'
+            }
+        });
+        calendar.render();
+    });
+</script>
+{{end}}
+{{end}}
+{{define "head"}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.2.0/main.min.css" />
+{{end}}
+{{define "script"}}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.2.0/main.min.js"></script>
+{{end}}

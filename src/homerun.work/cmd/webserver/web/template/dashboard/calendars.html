@@ -1,0 +1,112 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content appointments appointment-2">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="payment-settings">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5>Sync your orders to your calendars on Gmail, Outlook, and other services.</h5>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mt-4">
+                        <div class="col-md-3">
+                            <img src="{{.UrlAssets}}/dashboard/img/google_calendar.png" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="my-3 my-md-0">Check your Google calendar for availability when clients place an order.</h6>
+                        </div>
+                        <div class="col-md-3">
+                            {{if .Provider.User.GoogleCalendarToken}}
+                            <button type="button" class="btn btn-secondary btn-block" onclick="$('#msg-modal-google-cal').modal('show');">Deactivate</button>
+                            {{else}}
+                            <button type="button" class="btn btn-primary btn-block" onclick="$('#msg-modal-google-cal').modal('show');">Activate</button>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="row align-items-center mt-4">
+                        <div class="col-md-3">
+                            <img src="{{.UrlAssets}}/dashboard/img/google_calendar.png" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="my-3 my-md-0">Sync orders to Google by adding your HomeRun calendar to the Google Calendars app.</h6>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{.Provider.FormatCalendarGoogleURL}}" target="_blank" class="btn btn-primary btn-block">Add to Google</a>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mt-4">
+                        <div class="col-md-3">
+                            <img src="{{.UrlAssets}}/dashboard/img/calendar.png" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="my-3 my-md-0">Add orders to other calendars via ICal by downloading an .ics file and opening it on your device.</h6>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{.Provider.FormatCalendarIcalURL}}" target="_blank" class="btn btn-primary btn-block" onclick="$('#msg-modal-other-cal').modal('show');">Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Confirm Modal Google Calendar -->
+    <div class="modal fade" id="msg-modal-google-cal" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabel">Continue?</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modalConfirmMsg" class="mb-0 px-3 py-3">
+                                    {{if .Provider.User.GoogleCalendarToken}}
+                                    Are you sure you want to deactivate Google Calendar?
+                                    {{else}}
+                                    Are you sure you want to activate Google Calendar?
+                                    {{end}}
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                {{if .Provider.User.GoogleCalendarToken}}
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepGoogleCalDel}}">Continue</button>
+                                {{else}}
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepGoogleCalUpd}}">Continue</button>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Confirm Modal Google Calendar -->
+    <div class="modal fade" id="msg-modal-other-cal" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <p id="modalConfirmMsg" class="mb-0 px-3 py-3">
+                                    Please add the downloaded ICS file to your calendar app with iCalendar support, such as Outlook, iOS Calendar, etc.
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{end}}

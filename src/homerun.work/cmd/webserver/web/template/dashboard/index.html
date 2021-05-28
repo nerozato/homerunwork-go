@@ -1,0 +1,170 @@
+{{define "body"}}
+<div class="container">
+    <div class="row py-4">
+        <div class="col-md-12 text-center sidebar">
+            {{block "marquee" .}}
+            {{end}}
+            <h2 class="semibold">Hi <span>{{.Provider.Name}}</span>! Welcome back to the Dashboard.</h2>
+            <p class="mb-3">Manage your profile, services, orders and clients in one place.</p>
+        </div>
+    </div>
+    <div class="row card-navigation homepage">
+        {{if .Provider.IsAdmin}}
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLBookings}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/Appointments.png" srcset="{{.UrlAssets}}/dashboard/img/Appointments@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Orders</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLPayments}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/invoices.png" srcset="{{.UrlAssets}}/dashboard/img/invoices@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Invoices</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLClients}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/clients.png" srcset="{{.UrlAssets}}/dashboard/img/clients@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Clients</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLProfile}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/Profile.png" srcset="{{.UrlAssets}}/dashboard/img/Profile@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Profile</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLServices}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/MyServices.png" srcset="{{.UrlAssets}}/dashboard/img/MyServices@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Services</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLHours}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/schedule.png" srcset="{{.UrlAssets}}/dashboard/img/schedule@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Schedule</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLPaymentSettings}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/payment_methods.png" srcset="{{.UrlAssets}}/dashboard/img/payment_methods@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Payment</h2>
+                </div>
+            </div>
+        </div>
+        {{if .Provider.GoogleCalendarID}}
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLCalendar}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/calendar_sync.png" srcset="{{.UrlAssets}}/dashboard/img/calendar_sync@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Calendar Sync</h2>
+                </div>
+            </div>
+        </div>
+        {{end}}
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLTestimonials}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/history.png" srcset="{{.UrlAssets}}/dashboard/img/history@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Testimonials</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLAccount}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/MyAccount.png" srcset="{{.UrlAssets}}/dashboard/img/MyAccount@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Account</h2>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLBookings}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/Appointments.png" srcset="{{.UrlAssets}}/dashboard/img/Appointments@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Orders</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 click-area">
+            <div class="card p-4 text-center">
+                <div class="card-head d-flex mb-3">
+                    <a href="{{.Provider.GetURLHours}}">
+                        <img src="{{.UrlAssets}}/dashboard/img/schedule.png" srcset="{{.UrlAssets}}/dashboard/img/schedule@2x.png 2x" class="img-fluid">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h2 class="semibold mb-3">Schedule</h2>
+                </div>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</div>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('.click-area').click(function (evt) {
+            window.location = $(this).find('a').attr('href');
+        });
+    });
+</script>
+{{end}}

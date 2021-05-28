@@ -1,0 +1,160 @@
+{{define "body"}}
+<form id="about-form" method="POST" action="{{.FormAction}}" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content information">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-3 mb-lg-4">Our Story</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-4 mb-lg-5">
+                        <div>
+                            <h5>
+                                The narrative of your services, such as their quality, history, and unique features, which will be displayed on your web site. You can include pictures and YouTube videos.
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="editor-div" style="display:none;" class="editor form-group {{if .Errs.Text}}error{{end}}">
+                            <textarea maxlength="{{.Constants.lenTextLong}}" id="editor" name="{{.Inputs.Text}}">{{.Text}}</textarea>
+                            {{if .Errs.Text}}
+                            <div class="error-message">
+                                {{.Errs.Text}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        {{if .ClientView}}
+                        <a href="{{.Provider.GetURLProvider}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{else}}
+                        <a href="{{.Provider.GetURLAbout}}" class="btn btn-secondary float-left">Cancel</a>
+                        {{end}}
+                    </div>
+                    <div class="col-6">
+                        <input type="hidden" name="{{.Inputs.Client}}" value="{{.ClientView}}">
+                        <button id="about-btn" type="button" class="btn btn-primary float-right">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal fade" id="msg-modal-about" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="msg-modalLabel">Error</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p id="modalConfirmMsg" class="mb-0 px-3 py-3">
+                                The content is too large. Please modify and try again.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
+{{define "script"}}
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote-bs4.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote-bs4.min.js"></script>
+<script type="module">
+    window.addEventListener('load', function () {
+        const maxLength = parseInt('{{.Constants.lenTextLong}}');
+        const maxW = parseInt('{{.Constants.imgAboutWidth}}');
+        const maxH = parseInt('{{.Constants.imgAboutHeight}}');
+        const editor = $('#editor').summernote({
+            disableDragAndDrop: true,
+            dialogsFade: true,
+            focus: true,
+            height: 1000,
+            popover: {
+                image: [
+                    ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone', 'floatLeft', 'floatRight', 'floatNone', 'removeMedia']]
+                ],
+            },
+            toolbar: [
+                ['style', ['style', 'bold', 'italic', 'underline', 'clear', 'fontname', 'color']],
+                ['format', ['ul', 'ol', 'paragraph', 'height']],
+                ['insert', ['link', 'picture', 'video', 'hr', 'table']],
+                ['view', ['fullscreen', 'help']]
+            ],
+            callbacks: {
+                onImageUpload: function (files) {
+                    if (!files.length) {
+                        return;
+                    }
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        var blob = new Blob([evt.target.result]);
+                        var blobUrl = URL.createObjectURL(blob);
+                        var img = new Image();
+                        img.src = blobUrl;
+                        img.onload = function () {
+                            var canvas = document.createElement('canvas');
+                            var w = img.width;
+                            var h = img.height;
+                            if (w > h) {
+                                if (w > maxW) {
+                                    w = maxW;
+                                    h = h * maxH / h;
+                                    h = Math.round(h);
+                                }
+                            } else {
+                                if (h > maxH) {
+                                    w = w * maxH / h;
+                                    w = Math.round(w);
+                                    h = maxH;
+                                }
+                            }
+                            canvas.width = w;
+                            canvas.height = h;
+                            var ctx = canvas.getContext('2d');
+                            ctx.fillStyle = '#ffffff';
+                            ctx.fillRect(0, 0, w, h);
+                            ctx.drawImage(img, 0, 0, w, h);
+                            var imgUrl = canvas.toDataURL('image/jpeg', 0.8);
+                            var imgNode = $('<img>', {
+                                src: imgUrl
+                            });
+                            $('#editor').summernote('insertNode', imgNode[0]);
+                        }
+                    }
+                    var file = files[0];
+                    if (file) {
+                        reader.readAsArrayBuffer(file);
+                    }
+                }
+            }
+        });
+        $('#about-btn').click(function (evt) {
+            var contentLength = editor.summernote('code').length;
+            if (contentLength >= maxLength) {
+                $('#msg-modal-about').modal('show');
+                return;
+            }
+            $('#about-form').submit();
+        });
+        $('#editor-div').show();
+    });
+</script>
+{{end}}

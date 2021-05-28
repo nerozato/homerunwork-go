@@ -1,0 +1,20 @@
+{{define "body"}}
+<article class="mt-lg-5 mt-4 mb-lg-5 mb-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="black">Our Story</h1>
+                <p class="lead">{{.Provider.FormatAbout}}</p>
+            </div>
+        </div>
+    </div>
+</article>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('.note-video-clip').each(function () {
+            var p = $(this).parent().html();
+            $(this).parent().html('<div class="embed-video">' + p + '</div>');
+        });
+    });
+</script>
+{{end}}

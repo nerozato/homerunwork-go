@@ -1,0 +1,210 @@
+{{define "body"}}
+<form id="form-campaign" method="POST" action="{{.FormAction}}" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content edit-client">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-4 mb-lg-5">Add Campaign</h2>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.SvcID}}error{{end}}">
+                            <label for="svc">Select Service:</label>
+                            <select class="form-control" name="{{.Inputs.SvcID}}" onchange="submitCampaignService('#form-campaign', '#text', '#title');">
+                                <option value="" {{if not .SvcId}}selected{{end}}>All Services</option>
+                                {{range .Svcs}}
+                                <option value="{{.ID}}" {{if eq $.SvcId .ID.String}}selected{{end}}>{{.Name}}</option>
+                                {{end}}
+                            </select>
+                            {{if .Errs.SvcID}}
+                            <div class="error-message">
+                                {{.Errs.SvcID}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Text}}error{{end}}">
+                            <label for="text">Enter Promotional Text (if any):</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenTextCampaign}}" class="form-control" id="text" rows="3" name="{{.Inputs.Text}}">{{.Text}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Text}}</span>/{{.Constants.lenTextCampaign}}
+                                </div>
+                            </div>
+                            {{if .Errs.Text}}
+                            <div class="error-message">
+                                {{.Errs.Text}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Img}}error{{end}}">
+                            <label>Select Image for the Campaign:</label>
+                            <div id="div-img-ad" class="col-md-12"></div>
+                            {{if .Errs.Img}}
+                            <div class="error-message">
+                                {{.Errs.Img}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div>
+                            <label>Target Client Demographics:</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2 gender-checkbox">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Gender}}error{{end}}">
+                            <label>
+                                Gender:&nbsp;
+                                <input type="radio" class="form-check-input" name="{{.Inputs.Gender}}" value="{{.Constants.genderAll}}" {{if eq .Gender .Constants.genderAll}}checked{{end}}><span>All</span>
+                                <input type="radio" class="form-check-input" name="{{.Inputs.Gender}}" value="{{.Constants.genderMen}}" {{if eq .Gender .Constants.genderMen}}checked{{end}}><span>Men</span>
+                                <input type="radio" class="form-check-input" name="{{.Inputs.Gender}}" value="{{.Constants.genderWomen}}" {{if eq .Gender .Constants.genderWomen}}checked{{end}}><span>Women</span>
+                            </label>
+                            {{if .Errs.Gender}}
+                            <div class="error-message">
+                                {{.Errs.Gender}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.AgeMin}}error{{end}}">
+                            <label>
+                                Age Range:
+                                <input type="number" class="form-control" name="{{.Inputs.AgeMin}}" value="{{.AgeMin}}" min="{{.Constants.ageMin}}" max="{{.Constants.ageMax}}" step="1" />
+                            </label>
+                            {{if .Errs.AgeMin}}
+                            <div class="error-message">
+                                {{.Errs.AgeMin}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.AgeMax}}error{{end}}">
+                            <label>
+                                &nbsp;
+                                <input type="number" class="form-control" name="{{.Inputs.AgeMax}}" value="{{.AgeMax}}" min="{{.Constants.ageMin}}" max="{{.Constants.ageMax}}" step="1" />
+                            </label>
+                            {{if .Errs.AgeMax}}
+                            <div class="error-message">
+                                {{.Errs.AgeMax}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Locations}}error{{end}}">
+                            <label for="locations">Target Client Locations (leave empty for whole country):</label>
+                            <input type="text" class="form-control" id="locations" placeholder="e.g. Los Angeles Area, CA" name="{{.Inputs.Locations}}" value="{{.Locations}}" maxlength="{{.Constants.lenCampaignLocations}}">
+                            {{if .Errs.Locations}}
+                            <div class="error-message">
+                                {{.Errs.Locations}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Interests}}error{{end}}">
+                            <label for="interests">Target Client Interests (optional):</label>
+                            <input type="text" class="form-control" id="interests" placeholder="e.g. tutoring" name="{{.Inputs.Interests}}" value="{{.Interests}}" maxlength="{{.Constants.lenCampaignInterests}}">
+                            {{if .Errs.Interests}}
+                            <div class="error-message">
+                                {{.Errs.Interests}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group {{if .Errs.Start}}error{{end}}">
+                            <label for="start">Start Date:</label>
+                            <input type="text" class="form-control" id="start" name="{{.Inputs.Start}}" value="{{.Start}}">
+                            {{if .Errs.Start}}
+                            <div class="error-message">
+                                {{.Errs.Start}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group {{if .Errs.End}}error{{end}}">
+                            <label for="end">End Date:</label>
+                            <input type="text" class="form-control" id="end" name="{{.Inputs.End}}" value="{{.End}}">
+                            {{if .Errs.End}}
+                            <div class="error-message">
+                                {{.Errs.End}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="budget">Daily Budget:</label>
+                        <div class="input-group {{if .Errs.Budget}}error{{end}}">
+                            <input type="number" class="form-control" id="budget" placeholder="Enter Daily Budget" name="{{.Inputs.Budget}}" value="{{.Budget}}" min="{{.Constants.campaignBudgetMin}}" step="0.01" />
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="">USD</span>
+                            </div>
+                            {{if .Errs.Budget}}
+                            <div class="error-message">
+                                {{.Errs.Budget}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    <div class="col-6">
+                        <a href="{{.Provider.GetURLCampaigns}}" class="btn btn-secondary float-left">Cancel</a>
+                    </div>
+                    <div class="col-6">
+                        <input type="hidden" name="{{.Inputs.ID}}" value="{{.Id}}">
+                        <input type="hidden" id="timeZone" name="{{.Inputs.TimeZone}}">
+                        <button type="submit" class="btn btn-primary float-right">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#start').datepicker();
+        $('#start').datepicker('setStartDate', new Date());
+        $('#end').datepicker();
+        $('#end').datepicker('setStartDate', new Date());
+        setupCampaignImgWidget('#div-img-ad', '', 'Upload Image (rec. size: {{.Constants.imgAdWidth}}*{{.Constants.imgAdHeight}})', '{{.Inputs.Img}}', '{{.Campaign.GetURLImg}}');
+        $('#btn-trash-0').click(function () {
+            $('#in-img-del-ad').val('true');
+            $('#div-upload-ad').removeClass('d-none');
+        });
+        $('#timeZone').val(getTimeZone());
+    });
+</script>
+{{end}}

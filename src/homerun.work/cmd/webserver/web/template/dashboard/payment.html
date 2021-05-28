@@ -1,0 +1,148 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row justify-content-center">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-md-9 py-lg-5 py-4 pl-lg-5 content ">
+                <h2 class="semibold mb-4">Send Invoice</h2>
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Client</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p class="mb-1">
+                        <span class="text-muted">{{.Book.Client.Name}}</span>
+                    </p>
+                    <p class="mb-1">
+                        <span class="text-muted">{{.Book.Client.Phone}}</span>
+                    </p>
+                    <p class="mb-1">
+                        <span class="text-muted">{{.Book.Client.Email}}</span>
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Time</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p>
+                        {{.Book.FormatDateTime .TimeZone}}
+                        {{if .Book.IsRecurring}}
+                        &nbsp;&nbsp;&nbsp;
+                        <span class="repeat-text"></span>
+                        {{end}}
+                    </p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table tale-bordered">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0 pl-0">Service</th>
+                                <th width="100" class="border-top-0">
+                                    Time
+                                </th>
+                                <th width="80" class="border-top-0">
+                                    Price
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="pl-0">
+                                    <div class="media py-2">
+                                        <img src="{{.Svc.GetURLImgMain}}" alt="" width="100px" class="img-fluid rounded mr-3">
+                                        <div lang="media-body">
+                                            <p class="font-weight-bold mb-2">{{.Book.ServiceName}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{.Book.ServiceDurationLabel}}</td>
+                                <td>{{.Book.FormatServicePrice}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {{if .Book.Description}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Special Request</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p>{{.Book.FormatDescription}}</p>
+                </div>
+                {{end}}
+                {{if .Book.ProviderNote}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold">Message to Client</h5>
+                    <hr class="mt-2 mb-2" />
+                    <p>{{.Book.FormatProviderNote}}</p>
+                </div>
+                {{end}}
+                <div class="row align-items-end">
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.Name}}error{{end}}">
+                            <label for="name">Recipient:</label>
+                            <input type="text" class="form-control" id="name" placeholder="Name" name="{{.Inputs.Name}}" value="{{.Name}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.Email}}error{{end}}">
+                            <input type="text" class="form-control" placeholder="Email address" name="{{.Inputs.Email}}" value="{{.Email}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group {{if .Errs.Phone}}error{{end}}">
+                            <input type="text" class="form-control" placeholder="Phone number" name="{{.Inputs.Phone}}" value="{{.Phone}}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="price">Invoice Amount:</label>
+                            <div class="input-group {{if .Errs.Price}}error{{end}}">
+                                <div class="input-group-prepend">
+                                    <span>$</span>
+                                </div>
+                                <input id="price" type="number" class="form-control" name="{{.Inputs.Price}}" value="{{.Price}}" min="0" step="0.01" />
+                                {{if .Errs.Price}}
+                                <div class="error-message">
+                                    {{.Errs.Price}}
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mt-3">
+                            <label class="mb-0 pt-2">Due on Receipt</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group {{if .Errs.Desc}}error{{end}}">
+                            <label for="note">Note to Recipient:</label>
+                            <div class="textarea">
+                                <textarea maxlength="{{.Constants.lenDescPayment}}" id="note" cols="30" rows="3" class="form-control" name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                                <div class="chars">
+                                    <span>{{len .Desc}}</span>/{{.Constants.lenDescPayment}}
+                                </div>
+                            </div>
+                            {{if .Errs.Desc}}
+                            <div class="error-message">
+                                {{.Errs.Desc}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <a href="{{.Book.GetURLView}}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                    <div class="col-auto">
+                        <input type="hidden" name="{{.Inputs.BookID}}" value="{{.Book.ID}}">
+                        <button type="submit" class="btn btn-primary float-left">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{end}}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{.GoogleTrackingId}}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', '{{.GoogleTrackingId}}');
+    </script>
+    {{if .Provider.GoogleTrackingID}}
+    <script>
+        gtag('config', '{{.Provider.GoogleTrackingID}}');
+    </script>
+    {{end}}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="{{.MetaDesc}}">
+    <meta name="keywords" content="{{.MetaKeywords}}">
+    <title>{{.PageTitle}}</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    {{block "head" .}}
+    {{end}}
+    <link rel="stylesheet" href="{{.UrlAssets}}/client/css/{{.FileCss}}">
+    <link rel="icon" href="{{.Provider.GetURLImgFavIcon}}" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/81bbf29f30.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    {{block "body-pre" .}}
+    {{end}}
+    {{if .HasAccess}}
+    <div class="top-bar py-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <a href="{{.Provider.GetURLBookings}}" class="text-uppercase bold"><i class="fa fa-cogs" aria-hidden="true"></i> Dashboard</a>
+                    {{if .IsAdmin}}
+                    {{if .ClientView}}
+                    <a href="{{.Provider.GetURLProvider}}" class="text-uppercase bold ml-5"><i class="fas fa-external-link-square-alt" aria-hidden="true"></i></i> Edit</a>
+                    {{else}}
+                    <a href="{{.Provider.MarkURLClient .Provider.GetURLProvider}}" class="text-uppercase bold ml-5"><i class="fa fa-external-link" aria-hidden="true"></i> Preview</a>
+                    {{end}}
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+    {{if not .NavDisable}}
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-xl">
+                <a class="navbar-brand" href="{{.Provider.GetURLProvider}}">
+                    <span class="logo">
+                        <img src="{{.Provider.GetURLImgLogo}}" alt="">
+                    </span>
+                    <span class="d-inline bold subtitle">{{.Provider.Name}}</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile" aria-controls="navbar-mobile" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar-mobile">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{.Provider.GetURLProvider}}">Home</a>
+                        </li>
+                        {{if .FaqCount}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{.Provider.GetURLFaqClient}}">FAQ</a>
+                        </li>
+                        {{end}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{.Provider.GetURLContactClient}}">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    {{end}}
+    {{block "body" .}}
+    {{end}}
+    <footer>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12 social text-center text-lg-right">
+                    {{if or .Provider.URLFacebook .Provider.URLInstagram .Provider.URLLinkedIn .Provider.URLTwitter .Provider.URLWeb}}
+                    <ul class="list-unstyled clearfix">
+                        {{if .Provider.URLFacebook}}
+                        <li><a href="{{.Provider.URLFacebook}}" target="_blank"><i class="fab fa-facebook" aria-hidden="true"></i></a></li>
+                        {{end}}
+                        {{if .Provider.URLInstagram}}
+                        <li><a href="{{.Provider.URLInstagram}}" target="_blank"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+                        {{end}}
+                        {{if .Provider.URLLinkedIn}}
+                        <li><a href="{{.Provider.URLLinkedIn}}" target="_blank"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
+                        {{end}}
+                        {{if .Provider.URLTwitter}}
+                        <li><a href="{{.Provider.URLTwitter}}" target="_blank"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+                        {{end}}
+                        {{if .Provider.URLWeb}}
+                        <li><a href="{{.Provider.URLWeb}}" target="_blank"><i class="fas fa-globe" aria-hidden="true"></i></a></li>
+                        {{end}}
+                    </ul>
+                    {{end}}
+                </div>
+            </div>
+            <hr>
+            <div class="row copyright">
+                <div class="col-lg-6 menu text-center text-lg-left">
+                    <ul class="list-unstyled">
+                        <li><a href="{{.UrlPolicy}}">Privacy Policy</a></li>
+                        <li><a href="{{.UrlTerms}}">Service Terms</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 text-center text-lg-right">
+                    <p>Hosted by HomeRun.work, Copyright {{.CurrentYear}}, all rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Message Modal -->
+    <div class="modal fade" id="msg-modal" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabel">{{if .TitleAlert}}{{.TitleAlert}}{{else}}Notification{{end}}</h5>
+                            </div>
+                            <div class="modal-body">
+                                {{if .Msg}}
+                                <p class="mb-0 px-3 py-3">{{.Msg}}</p>
+                                {{end}}
+                                {{if .Err}}
+                                <p class="mb-0 px-3 py-3">{{.Err}}</p>
+                                {{end}}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{.UrlAssets}}/client/js/jquery-3.4.1.min.js"></script>
+    <script src="{{.UrlAssets}}/client/js/bootstrap.min.js"></script>
+    <script src="{{.UrlAssets}}/client/js/slick.min.js"></script>
+    <script src="{{.UrlAssets}}/client/js/bootstrap-datepicker.min.js"></script>
+    <script src="{{.UrlAssets}}/client/js/{{.FileJs}}"></script>
+    {{block "script" .}}
+    {{end}}
+    {{if or (.Err) (.Msg)}}
+    <script type="module">
+        window.addEventListener('load', function () {
+            $('#msg-modal').modal('show');
+        });
+    </script>
+    {{end}}
+    <script type="module">
+        window.addEventListener('load', function () {
+            setCookieTimeZone('{{.Constants.cookieTimeZone}}');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content my-services">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="semibold mb-3 mb-lg-4">FAQ</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mb-4 mb-lg-5">
+                    <div>
+                        <h5>
+                            The frequently asked questions about your services for your clients.
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <form id="services-form" method="POST" action="{{$.FormAction}}">
+                {{range $i, $v := .Faqs}}
+                <div class="service-cell mb-4">
+                    <div class="service-question">
+                        {{.Question}}
+                    </div>
+                    <div class="service-actions">
+                        <button type="button" class="btn btn-quaternary p-0 edit-btn" data-url="{{$.Provider.GetURLFaqEdit .ID}}">
+                            <i class="fas fa-pencil-alt icon-orange" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-quaternary btn-order-up p-0 up-btn" {{if eq $i 0}}disabled{{end}} data-id="{{.ID}}">
+                            <i class="fas fa-caret-up {{if ne $i 0}}icon-orange{{end}}" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-quaternary btn-order-down p-0 down-btn" {{if eq $i $.Count}}disabled{{end}} data-id="{{.ID}}">
+                            <i class="fas fa-caret-down {{if ne $i $.Count}}icon-orange{{end}}" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+                {{end}}
+                <input id="step-input" type="hidden" name="{{.Inputs.Step}}">
+                <input id="id-input" type="hidden" name="{{.Inputs.ID}}">
+            </form>
+            <div class="row mt-3 mt-lg-4">
+                <div class="col-xl-9 offset-xl-2">
+                    <a href="{{.Provider.GetURLFaqAdd}}" class="btn-block btn btn-quinary text-left"><i class="fas fa-plus" aria-hidden="true"></i> Add FAQ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('.edit-btn').click(function (evt) {
+            var url = $(this).data('url');
+            window.location = url;
+        });
+        $('.up-btn').click(function (evt) {
+            $('#step-input').val('{{.Steps.StepUp}}')
+            var id = $(this).data('id');
+            $('#id-input').val(id)
+            $('#services-form').submit();
+        });
+        $('.down-btn').click(function (evt) {
+            $('#step-input').val('{{.Steps.StepDown}}')
+            var id = $(this).data('id');
+            $('#id-input').val(id)
+            $('#services-form').submit();
+        });
+    });
+</script>
+{{end}}

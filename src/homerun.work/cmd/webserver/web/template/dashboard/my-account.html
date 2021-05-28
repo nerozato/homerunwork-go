@@ -1,0 +1,151 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content my-account">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <form method="POST" action="{{.FormAction}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="semibold mb-3 mb-lg-4">Account</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-4 mb-lg-5">
+                        <div>
+                            <h5>
+                                Your account log in credentials and settings.
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label>Email:</label>
+                            <p>{{.Provider.User.Email}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3 {{if .Errs.FirstName}}error{{end}}">
+                            <label for="firstName">First Name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="First Name" name="{{.Inputs.FirstName}}" value="{{.FirstName}}" maxlength="{{.Constants.lenName}}" {{if .Provider.User.IsOAuth}}disabled{{end}}>
+                            {{if .Errs.FirstName}}
+                            <div class="error-message">
+                                {{.Errs.FirstName}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group {{if .Errs.LastName}}error{{end}}">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="{{.Inputs.LastName}}" value="{{.LastName}}" maxlength="{{.Constants.lenName}}" {{if .Provider.User.IsOAuth}}disabled{{end}}>
+                            {{if .Errs.LastName}}
+                            <div class="error-message">
+                                {{.Errs.LastName}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                {{if not .Provider.User.IsOAuth}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group mb-3 {{if .Errs.Password}}error{{end}}" id="show_hide_password">
+                            <label for="password" class="d-block w-100">Password:</label>
+                            <input type="password" class="form-control" id="password" placeholder="••••••••••" name="{{.Inputs.Password}}">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-eye-slash" aria-hidden="true"></i></span>
+                            </div>
+                            {{if .Errs.Password}}
+                            <div class="error-message">
+                                {{.Errs.Password}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group {{if .Errs.Phone}}error{{end}}">
+                            <label for="phone">Mobile Number for SMS</label>
+                            <input type="text" class="form-control" id="phone" placeholder="Enter your phone number" name="{{.Inputs.Phone}}" value="{{.Phone}}">
+                            {{if .Errs.Phone}}
+                            <div class="error-message">
+                                {{.Errs.Phone}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group mb-3 {{if .Errs.TimeZone}}error{{end}}">
+                            <a name="{{.Inputs.TimeZone}}"></a>
+                            <label for="timeZone">Timezone:</label>
+                            <select class="form-control" id="timeZone" name="{{.Inputs.TimeZone}}">
+                                {{range .TimeZones}}
+                                <option value="{{.}}" {{if eq . $.TimeZone}}selected{{end}}>{{.}}</option>
+                                {{end}}
+                            </select>
+                            {{if .Errs.TimeZone}}
+                            <div class="error-message">
+                                {{.Errs.TimeZone}}
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="custom-control custom-checkbox mt-2">
+                            <input type="checkbox" class="custom-control-input" id="disablePhone" name="{{.Inputs.DisablePhone}}" {{if .DisablePhone}}checked{{end}} {{if not .Phone}}disabled{{end}}>
+                            <label class="custom-control-label" for="disablePhone">Disable SMS Notifications</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        {{if not .Provider.User.EmailVerified}}
+                        <div role="alert">
+                            <p class="alert alert-warning mt-3">Please verify your email: {{.Provider.User.Email}}</p>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row form-actions mt-4 mt-lg-5">
+                    {{$w := 12}}
+                    {{if not .Provider.User.EmailVerified}}
+                    {{$w = 8}}
+                    {{end}}
+                    {{if not .Provider.User.EmailVerified}}
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-secondary" name="{{.Inputs.Step}}" value="{{.Steps.StepVerify}}">Verify Email</button>
+                    </div>
+                    {{end}}
+                    <div class="col-{{$w}}">
+                        <button type="submit" class="btn btn-primary float-right" name="{{.Inputs.Step}}" value="{{.Steps.StepUpd}}">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#phone').on('input', function (evt) {
+            if ($('#phone').val().length > 0) {
+                $('#disablePhone').attr('disabled', false);
+                return;
+            }
+            $('#disablePhone').attr('disabled', true);
+        });
+    });
+</script>
+{{end}}

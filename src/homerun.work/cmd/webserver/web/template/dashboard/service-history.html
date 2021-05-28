@@ -1,0 +1,12 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content client-list">
+            {{block "breadcrumb" .}}
+            {{end}}
+        </div>
+    </div>
+</div>
+{{end}}

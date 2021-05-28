@@ -1,0 +1,347 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}" class="px-3 py-3 px-lg-5 py-lg-5" enctype="multipart/form-data">
+    <div class="multiform-content">
+        <div class="container">
+            <div class="row alpha justify-content-center">
+                <div class="col-lg-10">
+                    <div class="tab-content">
+                        <div class="tab-pane fade step1 show active" role="tabpanel" aria-labelledby="step-1">
+                            <div class="business-profile">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <h6 class="font-weight-bold">Enter information for your website.</h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="font-weight-bold">1. Your Profile:</h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group {{if .Errs.ProviderName}}error{{end}}">
+                                            <label for="providerName" class="field-title">Profle Name</label>
+                                            <input type="text" class="form-control" id="providerName" placeholder="The name for your website, which can be your name or business name." name="{{.Inputs.ProviderName}}" value="{{.ProviderName}}" maxlength="{{.Constants.lenName}}">
+                                            {{if .Errs.ProviderName}}
+                                            <div class="error-message">
+                                                {{.Errs.ProviderName}}
+                                            </div>
+                                            {{end}}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{if eq .TypeSignUp .Constants.serviceAreaEducationAndTraining}}
+                                <input type="hidden" name="{{.Inputs.SvcArea}}" value="{{.Constants.serviceAreaEducationAndTraining}}">
+                                {{else}}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group {{if .Errs.ServiceArea}}error{{end}}">
+                                            <label for="svcArea">Service Area:</label>
+                                            <select class="form-control" id="svcArea" name="{{.Inputs.SvcArea}}">
+                                                <option value="" {{if not .SvcArea}}selected{{end}} disabled>Please select</option>
+                                                {{range .SvcAreaStrs}}
+                                                <option {{if eq $.SvcArea .}}selected{{end}}>{{.}}</option>
+                                                {{end}}
+                                            </select>
+                                            {{if .Errs.ServiceArea}}
+                                            <div class="error-message">
+                                                {{.Errs.ServiceArea}}
+                                            </div>
+                                            {{end}}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{end}}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Upload Your Picture or Logo:</label>
+                                        <div id="div-img-logo" class="col-md-12"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group {{if .Errs.Biography}}error{{end}}">
+                                            <label for="providerDesc" class="field-title">About You:</label>
+                                            <div class="textarea">
+                                                {{if eq .TypeSignUp .Constants.serviceAreaEducationAndTraining}}
+                                                <textarea maxlength="{{.Constants.lenDescProvider}}" class="form-control" id="providerDesc" rows="4" placeholder="A summary of your qualifications, methods, and expectation of students." name="{{.Inputs.Bio}}">{{.Bio}}</textarea>
+                                                {{else}}
+                                                <textarea maxlength="{{.Constants.lenDescProvider}}" class="form-control" id="providerDesc" rows="4" placeholder="Description about yourself or your business." name="{{.Inputs.Bio}}">{{.Bio}}</textarea>
+                                                {{end}}
+                                                <div class="chars">
+                                                    <span>{{len .Bio}}</span>/{{.Constants.lenDescProvider}}
+                                                </div>
+                                            </div>
+                                            {{if .Errs.Biography}}
+                                            <div class="error-message">
+                                                {{.Errs.Biography}}
+                                            </div>
+                                            {{end}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade step2 show active" role="tabpanel" aria-labelledby="step-2">
+                            <div class="formStep2">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="font-weight-bold">
+                                            {{if eq .TypeSignUp .Constants.serviceAreaEducationAndTraining}}
+                                            2. Subject:
+                                            {{else}}
+                                            2. Service:
+                                            {{end}}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="form-group {{if .Errs.Name}}error{{end}}">
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            {{if eq .TypeSignUp .Constants.serviceAreaEducationAndTraining}}
+                                            <input type="text" class="form-control" id="name" placeholder="For example, English, Math, Music, Programming, etc." name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenName}}">
+                                            {{else}}
+                                            <input type="text" class="form-control" id="name" placeholder="Name of the service." name="{{.Inputs.Name}}" value="{{.Name}}" maxlength="{{.Constants.lenName}}">
+                                            {{end}}
+                                            {{if .Errs.Name}}
+                                            <div class="error-message">
+                                                {{.Errs.Name}}
+                                            </div>
+                                            {{end}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div class="form-group mb-0 {{if .Errs.Description}}error{{end}}">
+                                                <label for="desc" class="field-title">Description:</label>
+                                                <div class="textarea">
+                                                    {{if eq .TypeSignUp .Constants.serviceAreaEducationAndTraining}}
+                                                    <textarea maxlength="{{.Constants.lenDescSvc}}" class="form-control" id="desc" rows="5" placeholder="Details about the subject, your teaching method, pre-requisites, expectations, etc." name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                                                    {{else}}
+                                                    <textarea maxlength="{{.Constants.lenDescSvc}}" class="form-control" id="desc" rows="5" placeholder="Information about the service." name="{{.Inputs.Desc}}">{{.Desc}}</textarea>
+                                                    {{end}}
+                                                    <div class="chars">
+                                                        <span>{{len .Desc}}</span>/{{.Constants.lenDescSvc}}
+                                                    </div>
+                                                </div>
+                                                {{if .Errs.Description}}
+                                                <div class="error-message">
+                                                    {{.Errs.Description}}
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="durationBooking" class="field-title">Duration:</label>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="input-group mb-3 {{if .Errs.Duration}}error{{end}}">
+                                                <select class="form-control" name="{{.Inputs.Duration}}">
+                                                    <option value="" {{if not .Duration}}selected{{end}} disabled>Please select</option>
+                                                    {{range .DurationsBooking}}
+                                                    <option value="{{.ValueStr}}" {{if eq $.Duration .ValueStr}}selected{{end}}>{{.Label}}</option>
+                                                    {{end}}
+                                                </select>
+                                                {{if .Errs.Duration}}
+                                                <div class="error-message">
+                                                    {{.Errs.Duration}}
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="service-price" class="field-title">Price:</label>
+                                    <div class="input-group mb-3">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group mb-3 {{if .Errs.Price}}error{{end}}">
+                                                    <input type="number" class="form-control" id="service-price" placeholder="Enter price" id="service-price" name="{{.Inputs.Price}}" value="{{.Price}}" min="0" step="0.01" />
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text" id="">USD</span>
+                                                    </div>
+                                                    {{if .Errs.Price}}
+                                                    <div class="error-message">
+                                                        {{.Errs.Price}}
+                                                    </div>
+                                                    {{end}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group mb-3 {{if .Errs.PriceType}}error{{end}}">
+                                                    <select class="form-control" name="{{.Inputs.PriceType}}">
+                                                        {{range .PriceTypes}}
+                                                        <option value="{{.}}" {{if eq $.PriceType .}}selected{{end}}>{{.}}</option>
+                                                        {{end}}
+                                                    </select>
+                                                    {{if .Errs.PriceType}}
+                                                    <div class="error-message">
+                                                        {{.Errs.PriceType}}
+                                                    </div>
+                                                    {{end}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p>Note: you can add more after signup is complete.</p>
+                            </div>
+                            <input type="hidden" name="{{.Inputs.SvcID}}" value="{{.SvcId}}">
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade step3 show active" role="tabpanel" aria-labelledby="step-3">
+                            <div class="service-hours">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="font-weight-bold">3. Work Schedule:</h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label class="field-title">Choose your regular work days:</label>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="monday-availability" name="{{.Inputs.CheckedMon}}" {{if .CheckedMon}}checked{{end}} />
+                                                        <label class="custom-control-label" for="monday-availability">Mon</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="tuesday-availability" name="{{.Inputs.CheckedTue}}" {{if .CheckedTue}}checked{{end}} />
+                                                        <label class="custom-control-label" for="tuesday-availability">Tue</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="wednesday-availability" name="{{.Inputs.CheckedWed}}" {{if .CheckedWed}}checked{{end}} />
+                                                        <label class="custom-control-label" for="wednesday-availability">Wed</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="thursday-availability" name="{{.Inputs.CheckedThu}}" {{if .CheckedThu}}checked{{end}} />
+                                                        <label class="custom-control-label" for="thursday-availability">Thu</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="friday-availability" name="{{.Inputs.CheckedFri}}" {{if .CheckedFri}}checked{{end}} />
+                                                        <label class="custom-control-label" for="friday-availability">Friday</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="saturday-availability" name="{{.Inputs.CheckedSat}}" {{if .CheckedSat}}checked{{end}} />
+                                                        <label class="custom-control-label" for="saturday-availability">Sat</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="sunday-availability" name="{{.Inputs.CheckedSun}}" {{if .CheckedSun}}checked{{end}} />
+                                                        <label class="custom-control-label" for="sunday-availability">Sun</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="working-hours-container">
+                                    <label for="time" class="field-title">What are your typical work hours?</label>
+                                    <div class="row">
+                                        <div class="col-lg-3 timepick_inputs timepick_inputs_from">
+                                            <div class="form-group {{if .Errs.Time}}error{{end}}">
+                                                <label for="time" class="field-title sub-text">From: </label>
+                                                <div class="input-group date from-datepicker" id="timepick_from" data-target-input="nearest">
+                                                    <input id="time" type="text" class="form-control datetimepicker-input" data-target="#timepick_from" name="{{.Inputs.Time}}" value="{{.Time}}" />
+                                                    <div class="input-group-append" data-target="#timepick_from" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
+                                                    </div>
+                                                </div>
+                                                {{if .Errs.Time}}
+                                                <div class="error-message">
+                                                    {{.Errs.Time}}
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 timepick_inputs timepick_inputs_duration">
+                                            <div class="form-group {{if .Errs.ScheduleDuration}}error{{end}}">
+                                                <label for="duration" class="field-title sub-text">Duration: </label>
+                                                <select id="duration" class="form-control duration" name="{{.Inputs.ScheduleDuration}}">
+                                                </select>
+                                                {{if .Errs.ScheduleDuration}}
+                                                <div class="error-message">
+                                                    {{.Errs.ScheduleDuration}}
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p>Note: you can customize your work days and hours after signup is complete.</p>
+                                <input type="hidden" id="timeZone" name="{{.Inputs.TimeZone}}">
+                                <div class="form-navigation clearfix mt-4 step3Action">
+                                    <button type="submit" class="btn btn-primary btnNext float-right multiform-submit">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="cropper-modal" tabindex="-1" role="dialog" aria-labelledby="cropper-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cropper-modalLabel">Cropper</h5>
+                            </div>
+                            <div class="modal-body">
+                                <img id="crop-image" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary btn-crop" data-dismiss="modal">Crop</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="{{.UrlAssets}}/dashboard/js/cropper.js"></script>
+<script type="module">
+    window.addEventListener('load', function () {
+        $('#timeZone').val(getTimeZone());
+        renderDuration(parseInt('{{.ScheduleDuration}}'));
+        initTimePicker();
+        createImgWidget(0, '#div-img-logo', '', 'Upload Logo (rec. size: {{.Constants.imgLogoWidth}}*{{.Constants.imgLogoHeight}})', '{{.Inputs.ImgLogo}}', '{{.UrlImg}}');
+        $('#btn-trash-0').click(function () {
+            $('#in-img-del-logo').val('true');
+            $('#div-upload-logo').removeClass('d-none');
+        });
+        enableImgCropper('{{.Constants.imgLogoWidth}}', '{{.Constants.imgLogoHeight}}', '{{.Constants.imgLogoWidth}}', '{{.Constants.imgLogoHeight}}');
+    });
+</script>
+{{end}}
+{{define "body-pre"}}
+{{if .FacebookTrackingId}}
+<script>
+    fbq('track', 'InitiateCheckout');
+</script>
+{{end}}
+{{end}}

@@ -1,0 +1,36 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content edit-client">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="semibold mb-4 mb-lg-5">Add Campaign</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <p>Your campaign has been submitted.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <p>You will be contacted by one of our marketing experts within 24 hours.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4 mt-lg-5">
+                <div class="col-6">
+                    <a href="{{.Provider.GetURLCampaigns}}" class="btn btn-primary float-left">Done</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

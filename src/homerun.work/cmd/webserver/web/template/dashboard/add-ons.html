@@ -1,0 +1,148 @@
+{{define "body"}}
+<form method="POST" action="{{.FormAction}}">
+    <div class="container">
+        <div class="row">
+            {{block "left-nav" .}}
+            {{end}}
+            <div class="col-lg-9 pl-lg-5 content appointments appointment-2">
+                {{block "breadcrumb" .}}
+                {{end}}
+                <div class="payment-settings">
+                    {{if and (ne .Step .Steps.StepGoogleTracking) (ne .Step .Steps.StepGoogleTrackingDel) (ne .Step .Steps.StepGoogleTrackingUpd)}}
+                    <div class="row">
+                        <div class="col-12">
+                            <h5>Manage the integration with 3rd-party services.</h5>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mt-4">
+                        <div class="col-md-3">
+                            <img src="{{.UrlAssets}}/dashboard/img/zoom.png" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="my-3 my-md-0">Live conference with Zoom</h6>
+                        </div>
+                        <div class="col-md-3">
+                            {{if .Provider.GetZoomToken}}
+                            <button type="button" class="btn btn-secondary btn-block" onclick="$('#msg-modal-zoom').modal('show');">Remove</button>
+                            {{else}}
+                            <button type="button" class="btn btn-primary btn-block" onclick="$('#msg-modal-zoom').modal('show');">Activate</button>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{if .Provider.IsAdmin}}
+                    <div class="row align-items-center mt-4">
+                        <div class="col-md-3">
+                            <img src="{{.UrlAssets}}/dashboard/img/google_analytics.png" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="my-3 my-md-0">Your website page views and usage statistics.</h6>
+                        </div>
+                        <div class="col-md-3">
+                            {{if .Provider.GoogleTrackingID}}
+                            <button type="submit" class="btn btn-secondary btn-block" name="{{.Inputs.Step}}" value="{{.Steps.StepGoogleTracking}}">Remove</button>
+                            {{else}}
+                            <button type="submit" class="btn btn-primary btn-block" name="{{.Inputs.Step}}" value="{{.Steps.StepGoogleTracking}}">Activate</button>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{end}}
+                    {{else if or (eq .Step .Steps.StepGoogleTracking) (eq .Step .Steps.StepGoogleTrackingDel) (eq .Step .Steps.StepGoogleTrackingUpd)}}
+                    <div class="row align-items-center justify-content-center paypal-details mt-5">
+                        <div class="col-md-6 text-center">
+                            <input type="hidden" name="{{.Inputs.Type}}" value="{{.Type}}">
+                            <img src="{{.UrlAssets}}/dashboard/img/google_analytics.png" alt="" class="img-fluid mb-2">
+                            <p>Add Your Google Analytics Tracking ID:</p>
+                            <div class="form-group {{if .Errs.ID}}error{{end}}">
+                                {{if .Provider.GoogleTrackingID}}
+                                <label for="google-id">Tracking ID:</label>
+                                <input type="text" class="form-control" id="google-id" value="{{.Id}}" disabled>
+                                {{else}}
+                                <label for="google-id">Tracking ID:</label>
+                                <input type="text" class="form-control" id="google-id" placeholder="Enter the Google Tracking ID" name="{{.Inputs.ID}}" value="{{.Id}}">
+                                {{if .Errs.ID}}
+                                <div class="error-message">
+                                    {{.Errs.ID}}
+                                </div>
+                                {{end}}
+                                {{end}}
+                            </div>
+                            {{if .Provider.GoogleTrackingID}}
+                            <button type="button" class="btn btn-secondary mt-3" onclick="$('#msg-modal-google-tracking').modal('show');">Remove</button>
+                            {{else}}
+                            <button type="button" class="btn btn-primary mt-3" onclick="$('#msg-modal-google-tracking').modal('show');">Activate</button>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Confirm Modal Google Tracking -->
+    <div class="modal fade" id="msg-modal-google-tracking" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabel">Continue?</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modalConfirmMsg" class="mb-0 px-3 py-3">
+                                    {{if .Provider.GoogleTrackingID}}
+                                    Are you sure you want to deactivate the Google Tracking ID?
+                                    {{else}}
+                                    Are you sure you want to activate the Google Tracking ID?
+                                    {{end}}
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                {{if .Provider.GoogleTrackingID}}
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepGoogleTrackingDel}}">Continue</button>
+                                {{else}}
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepGoogleTrackingUpd}}">Continue</button>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Confirm Modal Zoom -->
+    <div class="modal fade" id="msg-modal-zoom" tabindex="-1" role="dialog" aria-labelledby="msg-modalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msg-modalLabel">Continue?</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modalConfirmMsg" class="mb-0 px-3 py-3">
+                                    {{if .Provider.GetZoomToken}}
+                                    Are you sure you want to deactivate Zoom?
+                                    {{else}}
+                                    Are you sure you want to activate Zoom?
+                                    {{end}}
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                {{if .Provider.GetZoomToken}}
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepZoomDel}}">Continue</button>
+                                {{else}}
+                                <button type="submit" class="btn btn-primary" name="{{.Inputs.Step}}" value="{{.Steps.StepZoomUpd}}">Continue</button>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{end}}

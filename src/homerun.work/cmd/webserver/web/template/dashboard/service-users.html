@@ -1,0 +1,58 @@
+{{define "body"}}
+<div class="container">
+    <div class="row">
+        {{block "left-nav" .}}
+        {{end}}
+        <div class="col-lg-9 pl-lg-5 content client-list">
+            {{block "breadcrumb" .}}
+            {{end}}
+            <div class="row">
+                <div class="col-md-12 mb-4 mb-lg-5">
+                    <div>
+                        <h5>
+                            Assign or remove team members for the service. Only team members assigned to the service can receive its orders.
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <form id="form-users" action="{{.FormAction}}" method="POST">
+                <div class="row align-items-center client-stats py-3 py-lg-4 m-0">
+                    <div class="col-xl-9 mb-3 mb-xl-0">
+                        <h2 class="semibold mb-0">Team Members</h2>
+                    </div>
+                </div>
+                <div class="row m-0">
+                    <input type="hidden" name="{{.Inputs.SvcID}}" value="{{.Svc.ID}}">
+                    <input type="hidden" id="input-user-id" name="{{.Inputs.UserID}}">
+                    <input type="hidden" id="input-step" name="{{.Inputs.Step}}">
+                    {{range .SvcUsers}}
+                    <div class="col-md-12 client">
+                        <ul class="list-unstyled clearfix mb-0">
+                            <li class="client-email">
+                                <span class="d-block">{{.Login}}</span>
+                            </li>
+                            <li class="client-actions">
+                                {{if not .User}}
+                                not registered
+                                {{else}}
+                                {{if .ServiceProviderUserID}}
+                                <button type="button" class="btn btn-tertiary" onclick="submitFormInputs('#form-users', '#input-user-id', '{{.ServiceProviderUserID}}', '#input-step', '{{$.Steps.StepDel}}');">Remove</button>
+                                {{else}}
+                                <button type="button" class="btn btn-tertiary" onclick="submitFormInputs('#form-users', '#input-user-id', '{{.ID}}', '#input-step', '{{$.Steps.StepAdd}}');">Add</button>
+                                {{end}}
+                                {{end}}
+                            </li>
+                        </ul>
+                    </div>
+                    {{end}}
+                </div>
+                <div class="row mt-5">
+                    <div class="col-sm-4">
+                        <a href="{{.Provider.GetURLServiceEdit .Svc.ID}}" class="btn btn-primary btn-block float-left mb-1">Done</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
